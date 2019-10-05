@@ -1,0 +1,49 @@
+<form class="form-inline col-md-12">
+  <div class="form-group col-md-1">
+    <button title="Add New" data-toggle="tooltip" data-placement="top" class="btn btn-primary"
+            (click)="newUrl()"> Add new
+    </button>
+  </div>
+  <div class="form-group col-md-5">
+
+    <input #targetURL style="width: 100%" type="text" class="form-control" [(ngModel)]="url.targetURL"
+           name="targetURL"
+           placeholder="Target URL http://... or https://..." autofocus>
+  </div>
+
+  <div class="form-group col-md-3">
+    <input style="width: 100%" type="text" class="form-control" [(ngModel)]="url.shortName" #shortName
+           name="shortName" placeholder="Vanity Name">
+  </div>
+  <div class="form-group col-md-3">
+
+    <button type="button" title="Save Shorten URL" data-toggle="tooltip" data-placement="top"
+            class="fas fa-save btn btn-primary mb-2" (click)="addUrl(url)"></button>
+    &nbsp;
+    <button type="button" title="Test" data-toggle="tooltip" data-placement="top"
+            class="fa fa-vial btn btn-primary mb-2" [disabled]="isNotSaved" (click)="testUrl(url)"></button>
+    &nbsp;
+    <button type="button" title="Copy to Clipboard" data-toggle="tooltip" data-placement="top"
+            class="fa fa-copy btn btn-primary mb-2" [disabled]="isNotSaved"
+            (click)="copyClipboard(targetURL)">
+    </button>
+    &nbsp;
+    <button type="button" title="Delete" data-toggle="tooltip" data-placement="top"
+            class="fa fa-trash btn btn-primary mb-2" [disabled]="isNotSaved" (click)="delete(url)">
+    </button>
+  </div>
+</form>
+<hr>
+
+<div class="alert alert-light" role="alert" [hidden]="!status">
+  <a class="alert-link" href="{{displayLink}}" target="_blank">{{displayLink}}</a> {{status}}
+</div>
+<div class="alert alert-danger" role="alert" [hidden]="!errorStatus">
+  {{errorStatus}}
+</div>
+<button title="Add" data-toggle="tooltip" data-placement="top"
+        class="fas fa-trash-restore btn btn-success" (click)="restoreUrlClick(url)"
+        style="margin-left: 20px;">Add
+</button>
+
+<app-data-source-list></app-data-source-list>
