@@ -125,6 +125,23 @@ app.UseRateLimiter();
 app.UseOutputCache();
 app.MapRazorPages();
 app.MapGet("/favicon.ico", () => Results.Redirect("/favicon.svg", permanent: true));
+app.MapGet("/sitemap.xml", (HttpContext ctx) =>
+{
+    var origin = $"{ctx.Request.Scheme}://{ctx.Request.Host}";
+    var sb = new System.Text.StringBuilder();
+    sb.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    sb.AppendLine("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
+    void Url(string loc, string changefreq, string priority)
+    {
+        sb.AppendLine($"  <url><loc>{loc}</loc><changefreq>{changefreq}</changefreq><priority>{priority}</priority></url>");
+    }
+    Url(origin + "/", "daily", "1.0");
+    Url(origin + "/Search", "weekly", "0.8");
+    foreach (var code in NfpDirect.Helpers.TypeCodeHelper.UsStates.Keys.OrderBy(k => k))
+        Url($"{origin}/?state={Uri.EscapeDataString(code)}", "weekly", "0.7");
+    sb.AppendLine("</urlset>");
+    return Results.Content(sb.ToString(), "application/xml; charset=utf-8");
+}).CacheOutput(p => p.Expire(TimeSpan.FromHours(24)));
 app.MapGet("/health", async (NfpDbContext db) =>
 {
     try
