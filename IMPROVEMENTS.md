@@ -935,3 +935,23 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 - Bug fix: null city no longer renders as `, IL` (missing city with comma artifact)
 - UX: ` US` text removed from every domestic org card; foreign country shown only when relevant
 - Code: duplicated 3-part inline expression → 2 testable helper methods
+
+---
+
+## Iteration 40 — ByPostcard Address Fix, Search Query Length Limit (2026-05-16)
+
+### Changes
+
+**ByPostcard address display** (`ByPostcard.cshtml`)
+- City/state line now uses `TypeCodeHelper.FormatLocation(pc.OrgCity, pc.OrgState)` — fixes the null city rendering to `, IL 60601` artifact (same bug fixed in Index/Search in iteration 39)
+- `OrgCountry` now suppressed via `ShouldShowCountry()` — US org cards no longer show "US" on every address block
+
+**Search query length limit** (`Pages/Search.cshtml.cs`, `Pages/Search.cshtml`)
+- Queries truncated server-side to 200 characters (`Query = Query[..MaxQueryLength]`)
+- `<input maxlength="200">` added to the search form for client-side enforcement
+- Prevents pathologically long FULLTEXT queries from reaching MariaDB's parser
+- 200 characters is well beyond any realistic org name search
+
+### Impact
+- ByPostcard: address display bug fixed — null city no longer appears as `, IL 60601`
+- Search: 200-char cap blocks oversized FULLTEXT queries (which scan the inverted index regardless of query length)
