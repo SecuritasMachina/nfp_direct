@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 60 — Guard Null Address Line 1 in All Address Blocks (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**, **`ByPostcard.cshtml`**, **`Details.cshtml`** (org address and officer address)
+- `@pc.OrgAddressLine1<br />` → `@if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine1)) { @pc.OrgAddressLine1<br /> }`
+- Same for `@pc.OfficerAddressLine1` in Details
+- **Pattern**: `OrgAddressLine2` and `OfficerAddressLine2` were already conditionally rendered; `Line1` was not
+- Affects 4 address blocks across 3 pages
+
+### Impact
+- No blank line rendered when address line 1 is missing from IRS data
+- Consistent null-guarding across all address field rendering
+
 ## Iteration 59 — Null CompanyName Fallback in Index/ByPostcard Google Search Links (2026-05-16)
 
 ### Changes

@@ -94,7 +94,7 @@
                         <span class="text-muted small">DBA: @pc.DBA1</span>
                     }
                     <address class="mb-1 small">
-                        @pc.OrgAddressLine1<br />
+                        @if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine1)) { @pc.OrgAddressLine1<br /> }
                         @if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine2))
                         {
                             @pc.OrgAddressLine2<br />
