@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 104 — Fix: Remove Static sitemap.xml That Shadowed Dynamic Endpoint (2026-05-16)
+
+### Changes
+
+**`NfpDirect/wwwroot/sitemap.xml`** — deleted
+- The static file was served by `UseStaticFiles` before routing, making the dynamic `/sitemap.xml` endpoint added in iteration 102 unreachable
+- The static file also had URLs hardcoded to `nfpdirect.ackdev.com`, making it wrong in other environments
+
+### Impact
+- The dynamic endpoint now serves correctly: environment-agnostic URLs, includes Search page, updated on every request (cached 24h)
+- 162 tests passing
+
+---
+
 ## Iteration 103 — Browse by Type Grid on Home Page (2026-05-16)
 
 ### Changes
