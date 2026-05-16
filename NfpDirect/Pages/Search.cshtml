@@ -1,10 +1,11 @@
 @page
 @model SearchModel
 @{
-    ViewData["Title"] = Model.Query.Length > 0 && Model.TotalResults > 0
-        ? $"Search: {Model.Query} ({Model.TotalResults} result{(Model.TotalResults == 1 ? "" : "s")})"
-        : Model.Query.Length > 0
-            ? $"Search: {Model.Query}"
+    var titleQuery = Model.Query.Length > 50 ? Model.Query[..50] + "…" : Model.Query;
+    ViewData["Title"] = titleQuery.Length > 0 && Model.TotalResults > 0
+        ? $"Search: {titleQuery} ({Model.TotalResults} result{(Model.TotalResults == 1 ? "" : "s")})"
+        : titleQuery.Length > 0
+            ? $"Search: {titleQuery}"
             : "Search";
 }
 
