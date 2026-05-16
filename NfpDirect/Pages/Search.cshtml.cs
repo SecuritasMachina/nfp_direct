@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using NfpDirect.Data;
 using NfpDirect.Models;
 
 namespace NfpDirect.Pages;
 
+[EnableRateLimiting("search")]
 public class SearchModel : PageModel
 {
     private readonly NfpDbContext _db;
