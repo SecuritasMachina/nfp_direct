@@ -995,3 +995,18 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 ### Impact
 - Website buttons no longer overflow with long raw URLs — show hostname (30 chars max) instead of full URL (potentially 200+ chars)
 - Cleaner, consistent display: all website buttons show a short domain name
+
+---
+
+## Iteration 43 — Details Cache Bug Fix: Vary by `back` Query Param (2026-05-16)
+
+### Changes
+
+**`DetailsPage` output cache policy** (`Program.cs`)
+- `SetVaryByQuery("id")` → `SetVaryByQuery("id", "back")`
+- **Bug**: Previously, `/Details?id=X&back=/` and `/Details?id=X&back=/Search?q=term` shared the same cache entry. The first visitor's `back` URL was served to all subsequent visitors within 30 seconds, causing the "← Back" button to navigate to the wrong origin.
+- **Fix**: The cache now creates separate entries per `(id, back)` combination. Each unique origin gets its own cached response.
+
+### Impact
+- "← Back" now always returns to the correct page for each user, regardless of cache state
+- The additional cache variants don't significantly impact memory: with a 30s TTL, the cache turnover limits entry accumulation
