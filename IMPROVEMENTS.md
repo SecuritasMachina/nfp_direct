@@ -998,6 +998,21 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 107 — State Abbreviations as Browse Links on Result Cards (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**, **`Search.cshtml`**
+- Changed city/state location display on result cards from `TypeCodeHelper.FormatLocation(...)` plain text to inline HTML where the state abbreviation is a link to `/?state=...`
+- City is shown as plain text; state abbreviation becomes a clickable link that filters the Browse page by state
+
+### Impact
+- Any result card now has a one-click path to "show me all orgs in this state" via the state abbreviation link
+- Consistent with the clickable type badge added in iteration 106
+- 165 tests passing
+
+---
+
 ## Iteration 106 — Type Badges as Filter Links (2026-05-16)
 
 ### Changes

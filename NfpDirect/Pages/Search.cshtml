@@ -82,6 +82,7 @@
                 @Model.TotalResults result@(Model.TotalResults == 1 ? "" : "s")
                 @if (Model.Query.Length > 0) { <text>for "<strong>@Model.Query</strong>"</text> }
                 @if (Model.StateFilter.Length > 0) { <text>in <strong>@Model.StateFilter</strong></text> }
+                @if (Model.TypeFilter.Length > 0) { <text>· <strong>@NfpDirect.Helpers.TypeCodeHelper.Label(Model.TypeFilter)</strong></text> }
                 — page @(Model.PageNumber + 1) of @Model.TotalPages
             </span>
             <div>
@@ -114,7 +115,13 @@
                         <small class="text-muted ms-2">EIN: @TypeCodeHelper.FormatEin(r.Pub78.EIN)</small>
                     </h2>
                     <div class="text-muted small">
-                        @TypeCodeHelper.FormatLocation(r.Pub78.City, r.Pub78.State)
+                        @if (!string.IsNullOrWhiteSpace(r.Pub78.City)) { @r.Pub78.City.Trim() }
+                        @if (!string.IsNullOrWhiteSpace(r.Pub78.State))
+                        {
+                            @if (!string.IsNullOrWhiteSpace(r.Pub78.City)) { <text>, </text> }
+                            <a href="/?state=@Uri.EscapeDataString(r.Pub78.State.Trim())"
+                               class="text-muted text-decoration-none">@r.Pub78.State.Trim()</a>
+                        }
                         @if (TypeCodeHelper.ShouldShowCountry(r.Pub78.Country)) { <text>· @r.Pub78.Country</text> }
                         @if (r.Pub78.TypeCode != null)
                         {
