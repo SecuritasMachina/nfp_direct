@@ -7,6 +7,17 @@
     var stateQs = Model.StateFilter.Length > 0 ? $"&state={Uri.EscapeDataString(Model.StateFilter)}" : "";
 }
 
+@section Head {
+    @if (Model.PageNumber > 0)
+    {
+        <link rel="prev" href="/ByPostcard?page=@(Model.PageNumber - 1)@stateQs" />
+    }
+    @if (Model.HasNextPage)
+    {
+        <link rel="next" href="/ByPostcard?page=@(Model.PageNumber + 1)@stateQs" />
+    }
+}
+
 <div class="d-flex justify-content-between align-items-center mb-2">
     <h4 class="mb-0">Browse by Postcard — Page @(Model.PageNumber + 1)</h4>
     <div>
