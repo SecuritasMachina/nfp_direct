@@ -998,6 +998,26 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 92 — Sitemap `<link>` in Head + Browse/ByPostcard Rich Snippet Robots (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Shared/_Layout.cshtml`**
+- Added `<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">` to `<head>` — supplements the `robots.txt` Sitemap directive with an in-HTML sitemap discovery pointer
+
+**`NfpDirect/Pages/Index.cshtml`**
+- Changed the robots meta logic from a conditional `noindex` on page > 0 to an explicit value for all cases:
+  - Page 0: `index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1`
+  - Page > 0: `noindex, follow`
+
+**`NfpDirect/Pages/ByPostcard.cshtml`**
+- Same change: page 0 gets rich snippet directives; page > 0 keeps `noindex, follow`
+
+### Impact
+- Sitemap link in `<head>` provides an extra discovery path for crawlers that parse HTML but not `robots.txt`
+- Browse and ByPostcard page 0 now explicitly grant Google permission to show long snippets and large image previews in search results
+- 155 tests passing
+
 ## Iteration 91 — Browse/ByPostcard: Show Full State Name in Title and Heading (2026-05-16)
 
 ### Changes
