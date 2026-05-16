@@ -998,6 +998,18 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 63 — TitleCase Applied to DBA Names on Index and ByPostcard (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`** and **`NfpDirect/Pages/ByPostcard.cshtml`**
+- DBA display: `@pc.DBA1` → `@TypeCodeHelper.TitleCase(pc.DBA1)`
+- **Inconsistency**: `Details.cshtml` applied `TitleCase` to DBA names; the two list pages showed the raw ALLCAPS database value
+
+### Impact
+- DBA names are now consistently title-cased across all listing pages
+- Visual consistency: org names and DBA names all use the same casing style
+
 ## Iteration 62 — `FormatPostalLine` Helper for Clean City/State/Postal Rendering (2026-05-16)
 
 ### Changes

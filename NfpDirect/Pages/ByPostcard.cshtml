@@ -80,7 +80,7 @@
             </h5>
             @if (!string.IsNullOrWhiteSpace(pc.DBA1))
             {
-                <div class="text-muted small">DBA: @pc.DBA1</div>
+                <div class="text-muted small">DBA: @TypeCodeHelper.TitleCase(pc.DBA1)</div>
             }
             <address class="small mb-1">
                 @if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine1)) { @pc.OrgAddressLine1<br /> }
