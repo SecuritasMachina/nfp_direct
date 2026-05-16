@@ -54,7 +54,7 @@ else
                     {
                         @pc.OrgAddressLine2<br />
                     }
-                    @TypeCodeHelper.FormatLocation(pc.OrgCity, pc.OrgState) @pc.OrgPostalCode<br />
+                    @TypeCodeHelper.FormatPostalLine(pc.OrgCity, pc.OrgState, pc.OrgPostalCode)<br />
                     @if (TypeCodeHelper.ShouldShowCountry(pc.OrgCountry)) { @pc.OrgCountry<br /> }
                 </address>
 
@@ -86,7 +86,7 @@ else
                     {
                         @pc.OfficerAddressLine2<br />
                     }
-                    @TypeCodeHelper.FormatLocation(pc.OfficerAddressCity, pc.State) @pc.PostalCode<br />
+                    @TypeCodeHelper.FormatPostalLine(pc.OfficerAddressCity, pc.State, pc.PostalCode)<br />
                     @if (TypeCodeHelper.ShouldShowCountry(pc.Country)) { @pc.Country<br /> }
                 </address>
 

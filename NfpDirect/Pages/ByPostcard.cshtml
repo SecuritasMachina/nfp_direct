@@ -88,7 +88,7 @@
                 {
                     @pc.OrgAddressLine2<br />
                 }
-                @TypeCodeHelper.FormatLocation(pc.OrgCity, pc.OrgState) @pc.OrgPostalCode<br />
+                @TypeCodeHelper.FormatPostalLine(pc.OrgCity, pc.OrgState, pc.OrgPostalCode)<br />
                 @if (TypeCodeHelper.ShouldShowCountry(pc.OrgCountry)) { @pc.OrgCountry<br /> }
             </address>
             <a class="btn btn-sm btn-outline-primary me-1"

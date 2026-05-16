@@ -91,6 +91,10 @@ public static class TypeCodeHelper
         string.Join(", ", new[] { city, state }
             .Where(s => !string.IsNullOrWhiteSpace(s)));
 
+    public static string FormatPostalLine(string? city, string? state, string? postal) =>
+        string.Join(" ", new[] { FormatLocation(city, state), postal?.Trim() }
+            .Where(s => !string.IsNullOrWhiteSpace(s)));
+
     public static bool ShouldShowCountry(string? country)
     {
         if (string.IsNullOrWhiteSpace(country)) return false;
