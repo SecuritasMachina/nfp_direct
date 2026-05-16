@@ -4,11 +4,14 @@
     ViewData["Title"] = "Error";
 }
 
-<div class="alert alert-danger">
-    <h4>An error occurred.</h4>
-    <p>Please try again or return to the <a href="/">home page</a>.</p>
+<div class="text-center py-5">
+    <h1 class="display-4 text-danger">500</h1>
+    <p class="lead">Something went wrong. Please try again or return to the home page.</p>
+    <a href="/" class="btn btn-primary">Browse Organizations</a>
+    &nbsp;
+    <a href="/Search" class="btn btn-outline-secondary">Search</a>
     @if (Model.ShowRequestId)
     {
-        <p class="mb-0"><small class="text-muted">Request ID: @Model.RequestId</small></p>
+        <p class="mt-3 text-muted small">Request ID: @Model.RequestId</p>
     }
 </div>
