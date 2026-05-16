@@ -955,3 +955,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 ### Impact
 - ByPostcard: address display bug fixed — null city no longer appears as `, IL 60601`
 - Search: 200-char cap blocks oversized FULLTEXT queries (which scan the inverted index regardless of query length)
+
+---
+
+## Iteration 41 — Details Page Address Null-City Fix (2026-05-16)
+
+### Changes
+
+**Details page org address and officer address** (`Pages/Details.cshtml`)
+- Org address block (lines ~57-58): `@pc.OrgCity, @pc.OrgState @pc.OrgPostalCode` → `@TypeCodeHelper.FormatLocation(pc.OrgCity, pc.OrgState) @pc.OrgPostalCode`
+- Org country: `@pc.OrgCountry` → suppressed via `ShouldShowCountry()` for US orgs
+- Officer address block (line ~88-89): `@pc.OfficerAddressCity@(pc.State != null ? ", " + pc.State : "") @pc.PostalCode` → `@TypeCodeHelper.FormatLocation(pc.OfficerAddressCity, pc.State) @pc.PostalCode`
+- Officer country: `@pc.Country` → suppressed via `ShouldShowCountry()` for US officers
+- Completes the city/state/country cleanup started in iteration 39 — Details page now consistent with Index, Search, and ByPostcard
+
+### Impact
+- Null city in org or officer address no longer renders `, IL 60601` (comma artifact)
+- "US" / "UNITED STATES" country lines removed from org and officer address blocks

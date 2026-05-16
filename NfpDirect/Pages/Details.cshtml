@@ -54,8 +54,8 @@ else
                     {
                         @pc.OrgAddressLine2<br />
                     }
-                    @pc.OrgCity, @pc.OrgState @pc.OrgPostalCode<br />
-                    @pc.OrgCountry
+                    @TypeCodeHelper.FormatLocation(pc.OrgCity, pc.OrgState) @pc.OrgPostalCode<br />
+                    @if (TypeCodeHelper.ShouldShowCountry(pc.OrgCountry)) { @pc.OrgCountry<br /> }
                 </address>
 
                 @if (!string.IsNullOrWhiteSpace(pc.DBA1))
@@ -85,8 +85,8 @@ else
                     {
                         @pc.OfficerAddressLine2<br />
                     }
-                    @pc.OfficerAddressCity@(pc.State != null ? ", " + pc.State : "") @pc.PostalCode<br />
-                    @pc.Country
+                    @TypeCodeHelper.FormatLocation(pc.OfficerAddressCity, pc.State) @pc.PostalCode<br />
+                    @if (TypeCodeHelper.ShouldShowCountry(pc.Country)) { @pc.Country<br /> }
                 </address>
 
                 <p class="mb-2">
