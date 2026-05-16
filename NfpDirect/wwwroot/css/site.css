@@ -57,6 +57,10 @@ dl.row dt, dl.row dd {
     max-width: 220px;
 }
 
+.search-form-group {
+    max-width: 400px;
+}
+
 @media print {
     nav, form, .btn, footer { display: none !important; }
     .card { border: 1px solid #ccc !important; box-shadow: none !important; }
