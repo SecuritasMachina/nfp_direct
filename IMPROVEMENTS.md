@@ -761,3 +761,24 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 - Browser now cryptographically verifies the Font Awesome CSS before executing it
 - If cdnjs.cloudflare.com were compromised and served a modified file, the browser rejects it instead of applying malicious CSS
 - All three CDN resources now have SRI — completes the supply-chain protection posture
+
+---
+
+## Iteration 32 — Search Form Accessibility, EIN Formatting Consistency (2026-05-16)
+
+### Changes
+
+**Search form WCAG fix** (`Pages/Search.cshtml`)
+- Added `aria-label="Search organizations"` to the query input — was missing (no associated `<label>`)
+- Added `aria-label="Filter by state"` to the state input — was missing (no associated `<label>`)
+- Added `aria-label="Search"` to the submit button — was icon-only with `aria-hidden="true"` on the icon, leaving the button with no accessible name (WCAG 4.1.2 failure)
+- The navbar search button was fixed in iteration 6; this iteration fixes the search page form itself
+
+**EIN display consistency** (`Pages/Details.cshtml`)
+- `Organization with EIN 123456789 not found.` → `Organization with EIN 12-3456789 not found.`
+- Meta description `(EIN 123456789)` → `(EIN 12-3456789)`
+- The card header already used `TypeCodeHelper.FormatEin()` (line 31); these two spots used raw `Model.Id`
+
+### Impact
+- Screen readers can now announce the Search page form correctly — previously the submit button had no accessible name
+- EIN display is consistent across all contexts on the Details page (formatted XX-XXXXXXX everywhere)

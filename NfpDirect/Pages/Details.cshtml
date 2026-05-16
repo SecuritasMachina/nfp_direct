@@ -6,8 +6,8 @@
         : Model.Id;
     ViewData["Title"] = name;
     ViewData["Description"] = Model.Pub78 != null
-        ? $"Non-profit organization details for {name} (EIN {Model.Id})."
-        : $"EIN {Model.Id} not found.";
+        ? $"Non-profit organization details for {name} (EIN {TypeCodeHelper.FormatEin(Model.Id)})."
+        : $"EIN {TypeCodeHelper.FormatEin(Model.Id)} not found.";
 }
 
 
@@ -18,7 +18,7 @@
 @if (Model.Pub78 == null)
 {
     <div class="alert alert-warning">
-        Organization with EIN <strong>@Model.Id</strong> not found.
+        Organization with EIN <strong>@TypeCodeHelper.FormatEin(Model.Id)</strong> not found.
     </div>
 }
 else

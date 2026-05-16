@@ -13,17 +13,19 @@
         <div class="col-sm-8 col-lg-9">
             <input type="search" name="q" class="form-control form-control-lg"
                    placeholder="Organization name or 9-digit EIN…"
+                   aria-label="Search organizations"
                    value="@Model.Query" autofocus />
         </div>
         <div class="col-sm-3 col-lg-2">
             <input type="search" name="state" class="form-control form-control-lg"
                    placeholder="State (e.g. IL)"
+                   aria-label="Filter by state"
                    maxlength="2"
                    value="@Model.StateFilter"
                    list="us-states" autocomplete="off" />
         </div>
         <div class="col-sm-1">
-            <button type="submit" class="btn btn-primary btn-lg w-100">
+            <button type="submit" class="btn btn-primary btn-lg w-100" aria-label="Search">
                 <i class="fa fa-search" aria-hidden="true"></i>
             </button>
         </div>
