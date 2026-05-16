@@ -5,7 +5,7 @@
         ? $"Browse by Postcard in {Model.StateFilter} — Page {Model.PageNumber + 1}"
         : $"Browse by Postcard — Page {Model.PageNumber + 1}";
     var bypcStateName = Model.StateFilter.Length > 0
-        ? TypeCodeHelper.UsStates.GetValueOrDefault(Model.StateFilter, Model.StateFilter)
+        ? TypeCodeHelper.StateName(Model.StateFilter)
         : null;
     ViewData["Description"] = bypcStateName != null
         ? $"Browse non-profit organizations with IRS Form 990-N (e-Postcard) filings in {bypcStateName}."

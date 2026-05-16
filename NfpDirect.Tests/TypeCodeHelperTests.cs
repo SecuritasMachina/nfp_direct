@@ -240,4 +240,25 @@ public class TypeCodeHelperTests
     [Fact]
     public void NormalizeUrl_DataScheme_ReturnsNull() =>
         Assert.Null(TypeCodeHelper.NormalizeUrl("data:text/html,<b>hi</b>"));
+
+    // StateName
+    [Theory]
+    [InlineData("IL", "Illinois")]
+    [InlineData("TX", "Texas")]
+    [InlineData("DC", "District of Columbia")]
+    [InlineData("PR", "Puerto Rico")]
+    public void StateName_KnownCode_ReturnsFullName(string code, string expected) =>
+        Assert.Equal(expected, TypeCodeHelper.StateName(code));
+
+    [Fact]
+    public void StateName_UnknownCode_ReturnsCodeItself() =>
+        Assert.Equal("ZZ", TypeCodeHelper.StateName("ZZ"));
+
+    [Fact]
+    public void StateName_Null_ReturnsEmpty() =>
+        Assert.Equal("", TypeCodeHelper.StateName(null));
+
+    [Fact]
+    public void StateName_LowercaseCode_ReturnsFullName() =>
+        Assert.Equal("California", TypeCodeHelper.StateName("ca"));
 }

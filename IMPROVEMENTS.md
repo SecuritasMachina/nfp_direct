@@ -998,6 +998,24 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 74 — StateName Helper in TypeCodeHelper (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Helpers/TypeCodeHelper.cs`**
+- Added `StateName(string? code)` — returns the full state name for a 2-letter code, falls back to the code itself if unknown, returns empty string for null
+- Case-insensitive lookup (delegates to `UsStates` dictionary which uses `OrdinalIgnoreCase`)
+
+**`NfpDirect/Pages/Index.cshtml`**, **`NfpDirect/Pages/ByPostcard.cshtml`**
+- Replaced inline `TypeCodeHelper.UsStates.GetValueOrDefault(...)` calls with `TypeCodeHelper.StateName(...)`
+
+**`NfpDirect.Tests/TypeCodeHelperTests.cs`**
+- Added 7 tests for `StateName`: known codes, unknown code fallback, null, lowercase input
+
+### Impact
+- State name resolution is now centrally tested and reusable
+- 125 tests passing
+
 ## Iteration 73 — noindex on Paginated Browse and ByPostcard Pages (2026-05-16)
 
 ### Changes
