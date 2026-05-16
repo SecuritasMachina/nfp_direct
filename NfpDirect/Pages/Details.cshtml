@@ -156,7 +156,18 @@ else
                 <p class="text-muted small text-uppercase fw-semibold mb-1">Identity</p>
                 <dl class="row mb-3">
                     <dt class="col-sm-6">EIN</dt><dd class="col-sm-6">@TypeCodeHelper.FormatEin(f.EIN)</dd>
-                    <dt class="col-sm-6">Tax period</dt><dd class="col-sm-6">@TypeCodeHelper.FormatTaxPeriod(f.TaxPd)</dd>
+                    <dt class="col-sm-6">Tax period</dt>
+                    <dd class="col-sm-6">
+                        @{var taxDt = TypeCodeHelper.TaxPeriodDatetime(f.TaxPd);}
+                        @if (taxDt != null)
+                        {
+                            <time datetime="@taxDt">@TypeCodeHelper.FormatTaxPeriod(f.TaxPd)</time>
+                        }
+                        else
+                        {
+                            @TypeCodeHelper.FormatTaxPeriod(f.TaxPd)
+                        }
+                    </dd>
                     <dt class="col-sm-6">Subsection code</dt><dd class="col-sm-6">@TypeCodeHelper.Fmt(f.Subseccd)</dd>
                     <dt class="col-sm-6">Described in 501(c)(3)?</dt><dd class="col-sm-6">@TypeCodeHelper.YesNo(f.S501c3or4947a1cd)</dd>
                     <dt class="col-sm-6">Terminated?</dt><dd class="col-sm-6">@TypeCodeHelper.YesNo(f.Ceaseoperationscd)</dd>
