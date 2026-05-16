@@ -998,6 +998,18 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 46 — Website Button Domain Display Consistency (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`** and **`NfpDirect/Pages/ByPostcard.cshtml`**
+- Website button text changed from generic "Website" to `@TypeCodeHelper.UrlDisplayText(siteUrl)` which shows the domain (e.g., "habitat.org")
+- **Gap**: `Search.cshtml` already showed the domain in website buttons. Index and ByPostcard showed only "Website", giving users no indication of which site they were navigating to.
+
+### Impact
+- All three listing pages now consistently display the org's domain in website buttons
+- Users can identify the destination before clicking (trust and safety improvement)
+
 ## Iteration 45 — Index Page: Apply FormatLocation/ShouldShowCountry to Postcard Block (2026-05-16)
 
 ### Changes
