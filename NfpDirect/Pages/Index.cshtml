@@ -36,6 +36,31 @@
     {
         <link rel="next" href="/?page=@(Model.PageNumber + 1)@stateQs" />
     }
+    @if (Model.PageNumber == 0 && Model.StateFilter.Length == 0)
+    {
+        var wsNonce = ViewContext.HttpContext.Items["csp-nonce"] as string ?? "";
+        var wsOrigin = $"{ViewContext.HttpContext.Request.Scheme}://{ViewContext.HttpContext.Request.Host}";
+        var wsLd = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "WebSite",
+            ["name"] = "NFP Direct",
+            ["url"] = wsOrigin + "/",
+            ["description"] = "Free IRS non-profit organization lookup — search by name or EIN, browse by state.",
+            ["potentialAction"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["@type"] = "SearchAction",
+                ["target"] = new System.Collections.Generic.Dictionary<string, object>
+                {
+                    ["@type"] = "EntryPoint",
+                    ["urlTemplate"] = wsOrigin + "/Search?q={search_term_string}"
+                },
+                ["query-input"] = "required name=search_term_string"
+            }
+        };
+        var wsJson = System.Text.Json.JsonSerializer.Serialize(wsLd);
+        <script type="application/ld+json" nonce="@wsNonce">@Html.Raw(wsJson)</script>
+    }
 }
 
 <div class="d-flex justify-content-between align-items-center mb-2">
