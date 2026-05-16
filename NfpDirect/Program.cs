@@ -85,6 +85,17 @@ app.Use(async (ctx, next) =>
     ctx.Response.Headers["X-Content-Type-Options"] = "nosniff";
     ctx.Response.Headers["X-Frame-Options"] = "SAMEORIGIN";
     ctx.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    // CSP: no inline scripts; CDN sources for Bootstrap + Font Awesome
+    ctx.Response.Headers["Content-Security-Policy"] =
+        "default-src 'none'; " +
+        "script-src cdn.jsdelivr.net; " +
+        "style-src 'self' cdn.jsdelivr.net cdnjs.cloudflare.com; " +
+        "font-src cdnjs.cloudflare.com; " +
+        "img-src 'self'; " +
+        "connect-src 'self'; " +
+        "base-uri 'self'; " +
+        "form-action 'self'; " +
+        "frame-ancestors 'self'";
     await next();
 });
 
