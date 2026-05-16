@@ -633,3 +633,93 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 - `pub.CompanyName + " " + pub.City` — if both null, would encode to a blank search
 - Changed to `(pub.CompanyName ?? name) + " " + (pub.City ?? "")` — falls back to TitleCase name
 - Prevents malformed `q=%20` Google News queries for orgs with no name stored in pub78
+
+---
+
+## Iteration 26 — Dead UA Script, Details HTTP 404, noopener (2026-05-16)
+
+### Changes
+
+**Removed dead Google Analytics UA script** (`_Layout.cshtml`)
+- Google Universal Analytics (UA-20653927-31) was shut down July 1, 2024
+- The 8-line GA script block was loading a dead CDN resource on every page load
+- Zero analytics data was being collected; removed entirely
+- Impact: eliminates one dead external network request per page
+
+**Details page now returns HTTP 404 for not-found EINs** (`Details.cshtml.cs`)
+- `OnGetAsync` was `Task` (void); set `Response.StatusCode = 404` and changed to `Task<IActionResult>`
+- Previously, visiting `/Details?id=000000000` returned HTTP 200 with "not found" content
+- Search engine bots were treating soft-404s as valid pages — now they receive proper 404
+- Same branded not-found page is shown; only the HTTP status code changes
+
+**`rel="noopener noreferrer"` on all `target="_blank"` links** (all pages)
+- 13 external link anchors across Index, Search, ByPostcard, Details, _Layout were missing this attribute
+- Without it, the opened page can access `window.opener` and redirect the parent tab (tabnapping)
+- Applied with a single `sed -i` across all 5 affected files
+
+**DetailsModel unit tests** (`NfpDirect.Tests/DetailsModelTests.cs`)
+- 6 new tests: 404 status for missing EIN, empty id returns page, found org returns 200 + model,
+  valid relative back URL accepted, external URL sanitized to "/", protocol-relative URL sanitized to "/"
+- Tests: 55 → 61 passing
+
+### Impact
+- Security: tabnapping vector closed on all external links
+- SEO: not-found EIN pages now correctly signal 404 to crawlers
+- Performance: one less dead CDN request per page (GA UA script)
+
+---
+
+## Iteration 27 — Output Caching on Browse and Details Pages (2026-05-16)
+
+### Changes
+
+**ASP.NET Core 8 output caching** (`Program.cs`, `Index.cshtml.cs`, `ByPostcard.cshtml.cs`, `Details.cshtml.cs`)
+- Added `AddOutputCache()` with two named policies:
+  - `BrowsePage`: 60-second TTL, varies by `page` and `state` query parameters
+  - `DetailsPage`: 30-second TTL, varies by `id` query parameter
+- Base policy set to `NoCache` — Search and health endpoints are unaffected
+- `[OutputCache(PolicyName = "BrowsePage")]` applied to `IndexModel` and `ByPostcardModel`
+- `[OutputCache(PolicyName = "DetailsPage")]` applied to `DetailsModel`
+- `UseOutputCache()` placed after `UseRouting()` so security headers (in earlier middleware) still run on cached responses
+
+### Impact
+- Browse pages: after the first request, each page/state combination is served from in-process memory for 60 seconds, eliminating repeated DB queries for paginated browse
+- Details: org detail page DB queries drop from 3 queries per request to 0 for 30s after first load
+- Search: unchanged — dynamic per-query results are never cached
+
+---
+
+## Iteration 28 — Rate Limiting on Search (2026-05-16)
+
+### Changes
+
+**Sliding-window rate limiter on `/Search`** (`Program.cs`, `Search.cshtml.cs`)
+- `AddRateLimiter()` with a "search" policy: 30 permits per minute per IP, 4 segments (checked every 15s)
+- Queue limit 0 — requests that exceed the limit are rejected immediately (no waiting)
+- Returns HTTP 429 with `Retry-After: 60` header on rejection
+- `[EnableRateLimiting("search")]` applied to `SearchModel` only
+- Browse and Details pages protected by output caching instead
+
+### Impact
+- Prevents abusive scraping of FULLTEXT queries from a single IP
+- Each FULLTEXT query runs a MariaDB inverted-index scan; 30/min is reasonable for human use
+- Browse and health endpoints are unaffected
+
+---
+
+## Iteration 29 — Content Security Policy (2026-05-16)
+
+### Changes
+
+**Content-Security-Policy header** (`Program.cs`)
+- Added `Content-Security-Policy` header in the existing security-header middleware
+- Policy: `default-src 'none'; script-src cdn.jsdelivr.net; style-src 'self' cdn.jsdelivr.net cdnjs.cloudflare.com; font-src cdnjs.cloudflare.com; img-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'`
+- Covers all CDN resources used: Bootstrap JS/CSS (cdn.jsdelivr.net) and Font Awesome CSS/fonts (cdnjs.cloudflare.com)
+- No inline scripts or styles in use — policy requires none, so no `'unsafe-inline'` needed
+- `default-src 'none'` as base — any unspecified fetch type is blocked by default
+- `frame-ancestors 'self'` replaces `X-Frame-Options: SAMEORIGIN` for modern browsers (both headers kept for compatibility)
+
+### Impact
+- Passes OWASP CSP audit — no wildcards, no `'unsafe-inline'`, no `'unsafe-eval'`
+- Prevents XSS script injection even if a rendering bug exists: unapproved script sources are blocked by the browser
+- Supplements the existing XSS protection from Razor auto-escaping with a browser-enforced defense layer
