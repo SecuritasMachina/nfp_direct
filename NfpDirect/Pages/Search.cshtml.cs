@@ -15,6 +15,7 @@ public class SearchModel : PageModel
 
     public SearchModel(NfpDbContext db) => _db = db;
 
+    private const int MaxQueryLength = 200;
     public string Query { get; private set; } = "";
     public string StateFilter { get; private set; } = "";
     public int PageNumber { get; private set; }
@@ -28,6 +29,8 @@ public class SearchModel : PageModel
         [FromQuery] string? page)
     {
         Query = (q ?? "").Trim();
+        if (Query.Length > MaxQueryLength)
+            Query = Query[..MaxQueryLength];
         StateFilter = (state ?? "").Trim().ToUpper();
         ViewData["SearchQuery"] = Query;
 
