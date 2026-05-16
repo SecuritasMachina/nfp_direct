@@ -84,6 +84,10 @@
                 {
                     <span class="badge bg-secondary ms-1" title="IRC 501(c)(@entry.Pub78.TypeCode)">@TypeCodeHelper.Label(entry.Pub78.TypeCode)</span>
                 }
+                @if (TypeCodeHelper.YesNo(entry.Postcard?.Terminated) == "Yes")
+                {
+                    <span class="badge bg-danger ms-1">Terminated</span>
+                }
             </div>
             @if (entry.Postcard != null)
             {

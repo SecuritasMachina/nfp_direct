@@ -101,6 +101,10 @@
                             <span class="badge bg-secondary ms-1"
                                   title="IRC 501(c)(@r.Pub78.TypeCode)">@TypeCodeHelper.Label(r.Pub78.TypeCode)</span>
                         }
+                        @if (TypeCodeHelper.YesNo(r.Postcard?.Terminated) == "Yes")
+                        {
+                            <span class="badge bg-danger ms-1">Terminated</span>
+                        }
                     </div>
                     @{var searchSiteUrl = TypeCodeHelper.NormalizeUrl(r.Postcard?.WebsiteURL);}
                     @if (searchSiteUrl != null)

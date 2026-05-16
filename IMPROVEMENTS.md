@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 68 — Terminated Badge on All Listing Pages (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Search.cshtml`**, **`Index.cshtml`**, **`ByPostcard.cshtml`**
+- Added `<span class="badge bg-danger ms-1">Terminated</span>` in the type/badge area of each card when `Postcard.Terminated` is "Y"
+- **Before**: Terminated status was only visible on the Details page (added in iteration 67)
+- **After**: Users can see terminated orgs directly in all listing views without navigating to Details
+
+### Impact
+- Terminated orgs are immediately identifiable across Browse, Search, and ByPostcard
+- Consistent with the Details page badge (same styling)
+
 ## Iteration 67 — Terminated Badge on Details Page (2026-05-16)
 
 ### Changes
