@@ -119,11 +119,11 @@ else
             else
             {
                 <p class="text-muted mb-1">No postcard information found for this organization.</p>
-                @if (pub.City != null || pub.State != null || pub.Country != null)
+                @if (!string.IsNullOrEmpty(TypeCodeHelper.FormatLocation(pub.City, pub.State)) || TypeCodeHelper.ShouldShowCountry(pub.Country))
                 {
                     <address class="small text-muted">
-                        @pub.City@(pub.State != null ? ", " + pub.State : "")
-                        @pub.Country
+                        @TypeCodeHelper.FormatLocation(pub.City, pub.State)
+                        @if (TypeCodeHelper.ShouldShowCountry(pub.Country)) { <text>· @pub.Country</text> }
                     </address>
                 }
             }

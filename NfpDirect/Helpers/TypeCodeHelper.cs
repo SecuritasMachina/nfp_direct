@@ -73,6 +73,17 @@ public static class TypeCodeHelper
             ["VI"]="U.S. Virgin Islands",["AS"]="American Samoa",["MP"]="Northern Mariana Islands",
         };
 
+    public static string FormatLocation(string? city, string? state) =>
+        string.Join(", ", new[] { city, state }
+            .Where(s => !string.IsNullOrWhiteSpace(s)));
+
+    public static bool ShouldShowCountry(string? country)
+    {
+        if (string.IsNullOrWhiteSpace(country)) return false;
+        var upper = country.Trim().ToUpperInvariant();
+        return upper != "US" && upper != "USA" && upper != "UNITED STATES";
+    }
+
     public static string? NormalizeUrl(string? url)
     {
         if (string.IsNullOrWhiteSpace(url) || url.Equals("n/a", StringComparison.OrdinalIgnoreCase))

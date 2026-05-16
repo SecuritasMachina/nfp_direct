@@ -63,8 +63,8 @@
                 <small class="text-muted ms-2">EIN: @TypeCodeHelper.FormatEin(entry.Pub78.EIN)</small>
             </h5>
             <div class="text-muted small">
-                @entry.Pub78.City@(entry.Pub78.State != null ? ", " + entry.Pub78.State : "")
-                @entry.Pub78.Country
+                @TypeCodeHelper.FormatLocation(entry.Pub78.City, entry.Pub78.State)
+                @if (TypeCodeHelper.ShouldShowCountry(entry.Pub78.Country)) { <text>· @entry.Pub78.Country</text> }
                 @if (entry.Pub78.TypeCode != null)
                 {
                     <span class="badge bg-secondary ms-1" title="IRC 501(c)(@entry.Pub78.TypeCode)">@TypeCodeHelper.Label(entry.Pub78.TypeCode)</span>
