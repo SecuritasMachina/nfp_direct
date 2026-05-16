@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 67 — Terminated Badge on Details Page (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Details.cshtml`**
+- Added `<span class="badge bg-danger">Terminated</span>` prominently below the org card header when `pc.Terminated` is "Y" (via `TypeCodeHelper.YesNo`)
+- **Before**: Terminated status was buried in the "Gross Receipts" / "Terminated: Yes/No" plain text block — easy to miss
+- **After**: Red badge appears at the top of the postcard section, immediately visible on load
+
+### Impact
+- Users immediately see that an org has terminated status before reading details
+- The underlying "Terminated: Yes" field in the data grid remains for completeness
+
 ## Iteration 66 — Guard Null OfficerName in Details Officer Section (2026-05-16)
 
 ### Changes
