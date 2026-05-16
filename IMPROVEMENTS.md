@@ -998,6 +998,18 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 66 — Guard Null OfficerName in Details Officer Section (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Details.cshtml`** (officer information block)
+- Officer name link: only rendered when `pc.OfficerName` is not null/blank; previously rendered an empty `<a>` tag with no visible text
+- "News" button: only rendered when `officerQuery` is non-empty (i.e., either name or city is available); previously rendered with `?q=` (empty query) when both were null
+
+### Impact
+- No invisible empty links in officer section when name is missing from IRS data
+- News button only shows when there's something to search for
+
 ## Iteration 65 — Deterministic Pagination Sort in ByPostcard (2026-05-16)
 
 ### Changes

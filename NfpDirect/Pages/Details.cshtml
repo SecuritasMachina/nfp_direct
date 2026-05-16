@@ -73,14 +73,21 @@ else
                 <h6>Officer Information:</h6>
                 <address>
                     @{var officerQuery = string.Join(" ", new[]{pc.OfficerName, pc.OfficerAddressCity}.Where(s => !string.IsNullOrWhiteSpace(s)));}
-                    <a target="_blank" rel="noopener noreferrer"
-                       href="https://www.google.com/search?q=@Uri.EscapeDataString(officerQuery)">
-                        @TypeCodeHelper.TitleCase(pc.OfficerName)
-                    </a>
-                    <a class="btn btn-sm btn-outline-primary ms-1" target="_blank" rel="noopener noreferrer"
-                       href="https://news.google.com/search?q=@Uri.EscapeDataString(officerQuery)">
-                        News
-                    </a><br />
+                    @if (!string.IsNullOrWhiteSpace(pc.OfficerName))
+                    {
+                        <a target="_blank" rel="noopener noreferrer"
+                           href="https://www.google.com/search?q=@Uri.EscapeDataString(officerQuery)">
+                            @TypeCodeHelper.TitleCase(pc.OfficerName)
+                        </a>
+                    }
+                    @if (officerQuery.Length > 0)
+                    {
+                        <a class="btn btn-sm btn-outline-primary ms-1" target="_blank" rel="noopener noreferrer"
+                           href="https://news.google.com/search?q=@Uri.EscapeDataString(officerQuery)">
+                            News
+                        </a>
+                    }
+                    <br />
                     @if (!string.IsNullOrWhiteSpace(pc.OfficerAddressLine1)) { @pc.OfficerAddressLine1<br /> }
                     @if (!string.IsNullOrWhiteSpace(pc.OfficerAddressLine2))
                     {
