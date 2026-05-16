@@ -32,6 +32,8 @@ public class SearchModel : PageModel
         if (Query.Length > MaxQueryLength)
             Query = Query[..MaxQueryLength];
         StateFilter = (state ?? "").Trim().ToUpper();
+        if (StateFilter.Length != 2 || !StateFilter.All(char.IsLetter))
+            StateFilter = "";
         ViewData["SearchQuery"] = Query;
 
         if (Query.Length == 0 && StateFilter.Length == 0)

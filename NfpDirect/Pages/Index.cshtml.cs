@@ -32,6 +32,8 @@ public class IndexModel : PageModel
             pageNum = 0;
         PageNumber = pageNum;
         StateFilter = (state ?? "").Trim().ToUpper();
+        if (StateFilter.Length != 2 || !StateFilter.All(char.IsLetter))
+            StateFilter = "";
 
         var queryable = _db.Pub78.AsNoTracking();
         if (StateFilter.Length > 0)

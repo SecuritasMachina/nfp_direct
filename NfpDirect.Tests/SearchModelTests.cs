@@ -204,6 +204,26 @@ public class SearchModelTests
         Assert.Equal("111111111", model.Results[0].Pub78.EIN);
     }
 
+    [Theory]
+    [InlineData("INVALID")]
+    [InlineData("123")]
+    [InlineData("I")]
+    [InlineData("12")]
+    public async Task InvalidStateFilter_IsIgnored(string badState)
+    {
+        using var db = CreateDb($"InvalidStateFilter_{badState}");
+        db.Pub78.AddRange(
+            new Pub78 { EIN = "111111111", CompanyName = "ANY ORG", State = "IL", Country = "US" }
+        );
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(q: "ANY", state: badState, page: null);
+
+        Assert.Equal("", model.StateFilter);
+        Assert.Equal(1, model.TotalResults);
+    }
+
     [Fact]
     public async Task EinSearch_WithStateFilter_BackUrlIncludesState()
     {
