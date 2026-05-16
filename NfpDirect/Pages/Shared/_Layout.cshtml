@@ -61,6 +61,11 @@
                            @(Context.Request.Path.StartsWithSegments("/ByPostcard") ? "aria-current=\"page\"" : "")
                            href="/ByPostcard">By Postcard</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link@(Context.Request.Path.StartsWithSegments("/Search") ? " active" : "")"
+                           @(Context.Request.Path.StartsWithSegments("/Search") ? "aria-current=\"page\"" : "")
+                           href="/Search">Search</a>
+                    </li>
                 </ul>
                 <form class="d-flex ms-auto" method="get" action="/Search" role="search">
                     <div class="input-group input-group-sm">
