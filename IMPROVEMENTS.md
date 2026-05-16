@@ -998,6 +998,25 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 97 — Details: Richer Meta Description with Type/Location (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Details.cshtml`**
+- When `Model.Pub78 != null`, meta description is now built from available org data:
+  - Org name (always)
+  - IRC 501(c)(X) type label if a known code (e.g., "Public Charity")
+  - City/state location if available
+  - Formatted EIN
+  - Appended: "View IRS records, address, and filing details."
+  - Example: "Habitat For Humanity · IRC 501(c)(3) Public Charity · Chicago, IL · EIN 36-2412074. View IRS records, address, and filing details."
+- Falls back to simple "EIN ... not found." for not-found pages (unchanged)
+
+### Impact
+- Google search result snippets for Detail pages now show org type and location — richer snippets increase click-through rate
+- Still fits within 160-char guideline for typical orgs
+- 159 tests passing
+
 ## Iteration 96 — Browse by State Grid on Home Page (2026-05-16)
 
 ### Changes

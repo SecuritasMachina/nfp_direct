@@ -5,9 +5,22 @@
         ? TypeCodeHelper.TitleCase(Model.Pub78.CompanyName ?? Model.Id)
         : Model.Id;
     ViewData["Title"] = name;
-    ViewData["Description"] = Model.Pub78 != null
-        ? $"Non-profit organization details for {name} (EIN {TypeCodeHelper.FormatEin(Model.Id)})."
-        : $"EIN {TypeCodeHelper.FormatEin(Model.Id)} not found.";
+    if (Model.Pub78 != null)
+    {
+        var descParts = new System.Collections.Generic.List<string> { name };
+        var descTypeLabel = TypeCodeHelper.Label(Model.Pub78.TypeCode);
+        if (!string.IsNullOrEmpty(descTypeLabel) && descTypeLabel != Model.Pub78.TypeCode)
+            descParts.Add($"IRC 501(c)({Model.Pub78.TypeCode}) {descTypeLabel}");
+        var descLocation = TypeCodeHelper.FormatLocation(Model.Pub78.City, Model.Pub78.State);
+        if (!string.IsNullOrEmpty(descLocation))
+            descParts.Add(descLocation);
+        descParts.Add($"EIN {TypeCodeHelper.FormatEin(Model.Id)}");
+        ViewData["Description"] = string.Join(" · ", descParts) + ". View IRS records, address, and filing details.";
+    }
+    else
+    {
+        ViewData["Description"] = $"EIN {TypeCodeHelper.FormatEin(Model.Id)} not found.";
+    }
     if (Model.Pub78 != null)
     {
         ViewData["CanonicalUrl"] = $"{ViewContext.HttpContext.Request.Scheme}://{ViewContext.HttpContext.Request.Host}/Details?id={Uri.EscapeDataString(Model.Id)}";
