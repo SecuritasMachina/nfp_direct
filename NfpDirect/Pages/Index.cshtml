@@ -17,6 +17,8 @@
         : Model.StateFilter.Length > 0 ? $"?{stateQs[1..]}"
         : "";
     ViewData["CanonicalUrl"] = $"{req.Scheme}://{req.Host}/{indexPageQs}";
+    if (Model.PageNumber > 0)
+        ViewData["Robots"] = "noindex, follow";
 }
 
 @section Head {
