@@ -86,6 +86,8 @@ app.Use(async (ctx, next) =>
     ctx.Response.Headers["X-Frame-Options"] = "SAMEORIGIN";
     ctx.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
     ctx.Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
+    ctx.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
+    ctx.Response.Headers["Cross-Origin-Resource-Policy"] = "same-origin";
     // CSP: no inline scripts; CDN sources for Bootstrap + Font Awesome
     ctx.Response.Headers["Content-Security-Policy"] =
         "default-src 'none'; " +
