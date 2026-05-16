@@ -132,6 +132,23 @@ public class TypeCodeHelperTests
     public void FormatLocation_BothWhitespace_ReturnsEmpty() =>
         Assert.Equal("", TypeCodeHelper.FormatLocation("  ", "  "));
 
+    // FormatPostalLine
+    [Fact]
+    public void FormatPostalLine_AllPresent_ReturnsCityStatePostal() =>
+        Assert.Equal("Chicago, IL 60601", TypeCodeHelper.FormatPostalLine("Chicago", "IL", "60601"));
+
+    [Fact]
+    public void FormatPostalLine_NullPostal_ReturnsCityState() =>
+        Assert.Equal("Chicago, IL", TypeCodeHelper.FormatPostalLine("Chicago", "IL", null));
+
+    [Fact]
+    public void FormatPostalLine_NullCityState_ReturnsPostal() =>
+        Assert.Equal("60601", TypeCodeHelper.FormatPostalLine(null, null, "60601"));
+
+    [Fact]
+    public void FormatPostalLine_AllNull_ReturnsEmpty() =>
+        Assert.Equal("", TypeCodeHelper.FormatPostalLine(null, null, null));
+
     // ShouldShowCountry
     [Fact]
     public void ShouldShowCountry_Null_ReturnsFalse() =>

@@ -998,6 +998,25 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 62 — `FormatPostalLine` Helper for Clean City/State/Postal Rendering (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Helpers/TypeCodeHelper.cs`**
+- Added `FormatPostalLine(string? city, string? state, string? postal)`: builds `"City, ST 00000"` filtering any null/blank parts so no trailing space when postal code is absent
+
+**`NfpDirect/Pages/Index.cshtml`**, **`ByPostcard.cshtml`**, **`Details.cshtml`** (org + officer address)
+- Replaced `@TypeCodeHelper.FormatLocation(...) @pc.OrgPostalCode` with `@TypeCodeHelper.FormatPostalLine(...)` across 4 address blocks
+- **Before**: `"Chicago, IL "` (trailing space when postal null); `"60601"` (no city/state prefixed when those were null)
+- **After**: No trailing spaces; gracefully handles any combination of null fields
+
+**`NfpDirect.Tests/TypeCodeHelperTests.cs`**
+- Added 4 `FormatPostalLine` tests (118 total)
+
+### Impact
+- Address rendering is clean for all combinations of null city/state/postal data
+- DRY: postal line formatting extracted once instead of repeated in-template
+
 ## Iteration 61 — Remove /Search from sitemap.xml (robots.txt Consistency) (2026-05-16)
 
 ### Changes
