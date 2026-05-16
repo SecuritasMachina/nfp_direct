@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 82 — Redirect /favicon.ico to /favicon.svg (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Program.cs`**
+- Added `app.MapGet("/favicon.ico", () => Results.Redirect("/favicon.svg", permanent: true))`
+- **Before**: `/favicon.ico` requests returned 404 (no ICO file in wwwroot)
+- **After**: 301 permanent redirect to the existing SVG favicon
+
+### Impact
+- Eliminates 404s from browsers (especially older ones), bots, and crawlers that still request favicon.ico
+- A 404 on favicon.ico is a common noise entry in error logs and a mild SEO signal degradation
+
 ## Iteration 81 — HSTS Preload Configuration (2026-05-16)
 
 ### Changes

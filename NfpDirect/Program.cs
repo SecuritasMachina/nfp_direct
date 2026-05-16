@@ -121,6 +121,7 @@ app.UseRouting();
 app.UseRateLimiter();
 app.UseOutputCache();
 app.MapRazorPages();
+app.MapGet("/favicon.ico", () => Results.Redirect("/favicon.svg", permanent: true));
 app.MapGet("/health", async (NfpDbContext db) =>
 {
     try
