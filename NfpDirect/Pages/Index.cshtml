@@ -20,6 +20,11 @@
     ViewData["Robots"] = Model.PageNumber > 0
         ? "noindex, follow"
         : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1";
+    if (indexStateName != null)
+    {
+        ViewData["GeoRegion"] = $"US-{Model.StateFilter}";
+        ViewData["GeoPlacename"] = indexStateName;
+    }
 }
 
 @section Head {

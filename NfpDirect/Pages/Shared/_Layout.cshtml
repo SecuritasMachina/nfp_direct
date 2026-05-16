@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ViewData["Title"] - NFP Direct</title>
+    <title>@ViewData["Title"] | NFP Direct</title>
     @if (ViewData["Description"] is string desc)
     {
         <meta name="description" content="@desc" />
@@ -17,7 +17,7 @@
     <meta name="twitter:card" content="summary" />
     <meta property="og:site_name" content="NFP Direct" />
     <meta property="og:url" content="@canonicalUrl" />
-    <meta property="og:title" content="@ViewData["Title"] - NFP Direct" />
+    <meta property="og:title" content="@ViewData["Title"] | NFP Direct" />
     @if (ViewData["Description"] is string ogDesc)
     {
         <meta property="og:description" content="@ogDesc" />
@@ -26,6 +26,14 @@
     @if (ViewData["Robots"] is string robots)
     {
         <meta name="robots" content="@robots" />
+    }
+    @if (ViewData["GeoRegion"] is string geoRegion)
+    {
+        <meta name="geo.region" content="@geoRegion" />
+        @if (ViewData["GeoPlacename"] is string geoPlacename)
+        {
+            <meta name="geo.placename" content="@geoPlacename" />
+        }
     }
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous" />
