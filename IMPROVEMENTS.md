@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 54 — State Filter Shown in Browse/ByPostcard Page Titles (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`** and **`NfpDirect/Pages/ByPostcard.cshtml`**
+- When a state filter is active, the `<title>` now includes the state code:
+  - Browse: "Browse Non-Profits in IL — Page 1" (was "Browse Non-Profits — Page 1")
+  - ByPostcard: "Browse by Postcard in IL — Page 1" (was "Browse by Postcard — Page 1")
+- Unfiltered pages unchanged
+
+### Impact
+- Browser tabs and bookmarks now distinguish filtered from unfiltered browsing sessions
+- State-specific pages are more discoverable in browser history
+
 ## Iteration 53 — Details Page: Clean Google Query Construction (2026-05-16)
 
 ### Changes

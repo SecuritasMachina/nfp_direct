@@ -1,7 +1,9 @@
 @page
 @model ByPostcardModel
 @{
-    ViewData["Title"] = $"Browse by Postcard — Page {Model.PageNumber + 1}";
+    ViewData["Title"] = Model.StateFilter.Length > 0
+        ? $"Browse by Postcard in {Model.StateFilter} — Page {Model.PageNumber + 1}"
+        : $"Browse by Postcard — Page {Model.PageNumber + 1}";
     ViewData["Description"] = "Browse non-profit organizations with IRS Form 990-N (e-Postcard) filings.";
     var bypcBackUrl = Uri.EscapeDataString("/ByPostcard" + (ViewContext.HttpContext.Request.QueryString.Value ?? ""));
     var stateQs = Model.StateFilter.Length > 0 ? $"&state={Uri.EscapeDataString(Model.StateFilter)}" : "";
