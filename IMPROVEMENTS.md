@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 78 — Expand Sitemap with State-Filtered Browse Pages (2026-05-16)
+
+### Changes
+
+**`NfpDirect/wwwroot/sitemap.xml`**
+- Added 56 state/territory-filtered Browse URLs (`/?state=XX`) for all entries in `TypeCodeHelper.UsStates`
+- US states and DC at priority 0.8; territories (PR, GU, VI, AS, MP) at priority 0.7
+- **Before**: sitemap contained only 1 URL (homepage)
+- **After**: 57 URLs covering every state/territory filter crawlers can discover
+
+### Impact
+- Search crawlers can now discover and index individual state non-profit browse pages
+- Enables search visibility for queries like "non-profits in Illinois" or "Texas non-profit organizations"
+
 ## Iteration 77 — Fix CSP Violation: Move Inline Style to CSS Class (2026-05-16)
 
 ### Changes
