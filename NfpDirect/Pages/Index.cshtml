@@ -163,3 +163,18 @@
         <span></span>
     }
 </nav>
+
+@if (Model.PageNumber == 0 && Model.StateFilter.Length == 0)
+{
+    <section aria-label="Browse by state" class="mt-4">
+        <h2 class="h6 text-muted text-uppercase mb-2">Browse by State</h2>
+        <div class="d-flex flex-wrap gap-1">
+            @foreach (var kv in TypeCodeHelper.UsStates.OrderBy(s => s.Value))
+            {
+                <a class="btn btn-sm btn-outline-secondary" href="/?state=@Uri.EscapeDataString(kv.Key)">
+                    @kv.Key <span class="text-muted">@kv.Value</span>
+                </a>
+            }
+        </div>
+    </section>
+}
