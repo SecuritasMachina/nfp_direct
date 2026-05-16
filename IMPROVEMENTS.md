@@ -998,6 +998,21 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 96 — Browse by State Grid on Home Page (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**
+- Added a "Browse by State" `<section>` at the bottom of page 0 (no state filter) with a link for every US state and territory from `TypeCodeHelper.UsStates`
+- Each state shows as a small button: "IL Illinois"
+- Section is hidden on paginated pages and state-filtered pages (irrelevant in those contexts)
+
+### Impact
+- Users can discover state-specific org lists directly from the home page — previously only discoverable by typing in the filter
+- Provides 57 internal links to state-filtered browse pages, supporting both SEO (crawlable internal link graph) and UX discovery
+- Matches the 57 state URLs already in sitemap.xml
+- 159 tests passing
+
 ## Iteration 95 — TotalPages in Browse/ByPostcard + Twitter Card Meta (2026-05-16)
 
 ### Changes
