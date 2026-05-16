@@ -998,6 +998,18 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 61 — Remove /Search from sitemap.xml (robots.txt Consistency) (2026-05-16)
+
+### Changes
+
+**`NfpDirect/wwwroot/sitemap.xml`**
+- Removed the `/Search` entry
+- **Inconsistency**: `robots.txt` has `Disallow: /Search` but the sitemap listed `/Search` as a priority 0.9 URL. Submitting a URL in the sitemap while disallowing it in robots.txt is contradictory; most crawlers will skip it anyway, but the explicit inconsistency is confusing to crawlers and Google Search Console.
+
+### Impact
+- sitemap.xml now only lists the homepage, which is the only crawlable starting point
+- No functional change for users
+
 ## Iteration 60 — Guard Null Address Line 1 in All Address Blocks (2026-05-16)
 
 ### Changes
