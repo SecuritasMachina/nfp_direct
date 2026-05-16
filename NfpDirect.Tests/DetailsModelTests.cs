@@ -39,6 +39,24 @@ public class DetailsModelTests
         return (new DetailsModel(db) { PageContext = pageContext, TempData = tempData }, httpContext);
     }
 
+    [Theory]
+    [InlineData("foobar")]
+    [InlineData("12345678")]       // 8 digits
+    [InlineData("1234567890")]     // 10 digits
+    [InlineData("12-3456789")]     // hyphenated
+    [InlineData("ABCDEFGHI")]      // letters
+    public async Task InvalidEinFormat_Returns404WithoutDbQuery(string badId)
+    {
+        using var db = CreateDb($"InvalidEin_{badId}");
+        var (model, httpContext) = CreateModel(db);
+
+        var result = await model.OnGetAsync(id: badId, back: null);
+
+        Assert.IsType<PageResult>(result);
+        Assert.Equal(404, httpContext.Response.StatusCode);
+        Assert.Null(model.Pub78);
+    }
+
     [Fact]
     public async Task NotFoundEin_Returns404StatusCode()
     {

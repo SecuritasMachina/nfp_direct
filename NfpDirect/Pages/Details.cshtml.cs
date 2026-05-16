@@ -28,6 +28,13 @@ public class DetailsModel : PageModel
         if (string.IsNullOrWhiteSpace(Id))
             return RedirectToPage("/Index");
 
+        // EINs in pub78 are always 9-digit numeric strings; reject anything else without a DB query
+        if (Id.Length != 9 || !Id.All(char.IsDigit))
+        {
+            Response.StatusCode = 404;
+            return Page();
+        }
+
         Pub78 = await _db.Pub78.AsNoTracking().FirstOrDefaultAsync(p => p.EIN == Id);
         if (Pub78 == null)
         {

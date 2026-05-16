@@ -998,6 +998,22 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 86 — Details: EIN Format Validation Before DB Query (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Details.cshtml.cs`**
+- Added EIN format guard: if `Id.Length != 9 || !Id.All(char.IsDigit)` → return 404 immediately without querying the DB
+- **Before**: any `id` value (e.g., "foobar", "12-3456789") triggered a parameterized DB query that returned null, wasting a DB round-trip
+- **After**: non-9-digit ids are rejected synchronously before any database access
+
+**`NfpDirect.Tests/DetailsModelTests.cs`**
+- Added 5-case theory `InvalidEinFormat_Returns404WithoutDbQuery` covering too-short, too-long, hyphenated, and alpha IDs
+
+### Impact
+- Reduces DB load from malformed crawl/scan requests hitting `/Details?id=<junk>`
+- 155 tests passing
+
 ## Iteration 85 — NormalizeUrl: Reject Garbage IRS URL Values (2026-05-16)
 
 ### Changes
