@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 77 — Fix CSP Violation: Move Inline Style to CSS Class (2026-05-16)
+
+### Changes
+
+**`NfpDirect/wwwroot/css/site.css`**
+- Added `.state-filter-group { max-width: 220px; }` class
+
+**`NfpDirect/Pages/Index.cshtml`**, **`NfpDirect/Pages/ByPostcard.cshtml`**
+- Replaced `style="max-width:220px"` inline attribute with `.state-filter-group` class
+
+### Impact
+- **Before**: `style=` attribute on the state filter form was silently blocked by CSP (`style-src` without `'unsafe-inline'`), causing the filter input to expand to full width on these pages
+- **After**: max-width constraint is applied via an external stylesheet (allowed by `style-src 'self'`), consistent with the CSP
+
 ## Iteration 76 — Semantic `<time>` Element for Tax Period on Details (2026-05-16)
 
 ### Changes
