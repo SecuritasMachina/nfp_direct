@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 56 — State Filter Shown in Browse/ByPostcard Page Headings (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`** and **`NfpDirect/Pages/ByPostcard.cshtml`**
+- The visible `<h4>` heading now includes the state code when a state filter is active, matching the `<title>` tag (updated in iteration 54)
+- Browse: "Non-Profit Organizations in IL — Page 1" (was "Non-Profit Organizations — Page 1")
+- ByPostcard: "Browse by Postcard in IL — Page 1" (was "Browse by Postcard — Page 1")
+
+### Impact
+- The page heading and browser tab title are now consistent
+- Users can see at a glance which state they're filtering by
+
 ## Iteration 55 — Details Page: CompanyName Null Fallback in Google Links (2026-05-16)
 
 ### Changes

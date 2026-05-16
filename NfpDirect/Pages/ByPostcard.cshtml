@@ -21,7 +21,9 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-2">
-    <h4 class="mb-0">Browse by Postcard — Page @(Model.PageNumber + 1)</h4>
+    <h4 class="mb-0">
+        Browse by Postcard@(Model.StateFilter.Length > 0 ? $" in {Model.StateFilter}" : "") — Page @(Model.PageNumber + 1)
+    </h4>
     <div>
         @if (Model.PageNumber > 0)
         {
