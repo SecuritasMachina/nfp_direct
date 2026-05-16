@@ -998,6 +998,21 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 100 — WebSite JSON-LD with SearchAction on Home Page (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**
+- Added `WebSite` JSON-LD block to `@section Head` on page 0, no-filter only (the canonical home page)
+- Schema includes: `name`, `url`, `description`, and `potentialAction` of type `SearchAction`
+- `SearchAction.target.urlTemplate` is `{origin}/Search?q={search_term_string}`
+- Uses the CSP nonce from `HttpContext.Items["csp-nonce"]` — no `'unsafe-inline'` needed
+
+### Impact
+- Google may display a "sitelinks searchbox" in search results for queries like "nfp direct" — a search form directly on the Google results page linking into NFP Direct Search
+- Complements the OpenSearch description (iteration 99) and the existing Search page
+- 159 tests passing
+
 ## Iteration 99 — OpenSearch Description for Browser Search Integration (2026-05-16)
 
 ### Changes
