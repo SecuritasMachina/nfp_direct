@@ -745,3 +745,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 ### Impact
 - Permissions-Policy: passes W3C / OWASP security header audit for feature policy
 - 429 page: rate-limited users see a navigable branded page instead of a dead-end plain text response
+
+---
+
+## Iteration 31 — SRI on Font Awesome CSS (2026-05-16)
+
+### Changes
+
+**Subresource Integrity on Font Awesome** (`Pages/Shared/_Layout.cshtml`)
+- Added `integrity="sha384-/o6I2CkkWC//PSjvWC/eYN7l3xM3tJm8ZzVkCOfp//W05QcE3mlGskpoHB6XqI+B"` to the Font Awesome CSS link tag
+- Hash computed from the live cdnjs.cloudflare.com resource for Font Awesome 6.5.0 `all.min.css`
+- Bootstrap CSS and JS already had SRI hashes; Font Awesome was the only CDN resource without one
+
+### Impact
+- Browser now cryptographically verifies the Font Awesome CSS before executing it
+- If cdnjs.cloudflare.com were compromised and served a modified file, the browser rejects it instead of applying malicious CSS
+- All three CDN resources now have SRI — completes the supply-chain protection posture
