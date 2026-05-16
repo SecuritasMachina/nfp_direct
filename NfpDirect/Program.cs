@@ -1,3 +1,4 @@
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,29 @@ builder.Services.AddResponseCompression(opts =>
     opts.EnableForHttps = true;
     opts.Providers.Add<BrotliCompressionProvider>();
     opts.Providers.Add<GzipCompressionProvider>();
+});
+
+builder.Services.AddRateLimiter(opts =>
+{
+    opts.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    // Sliding window: 30 search requests per minute per IP, checked every 15s
+    opts.AddPolicy("search", ctx =>
+        RateLimitPartition.GetSlidingWindowLimiter(
+            partitionKey: ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new SlidingWindowRateLimiterOptions
+            {
+                PermitLimit = 30,
+                Window = TimeSpan.FromMinutes(1),
+                SegmentsPerWindow = 4,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+    opts.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.Headers.RetryAfter = "60";
+        await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", token);
+    };
 });
 
 builder.Services.AddOutputCache(opts =>
@@ -73,6 +97,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseRouting();
+app.UseRateLimiter();
 app.UseOutputCache();
 app.MapRazorPages();
 app.MapGet("/health", async (NfpDbContext db) =>
