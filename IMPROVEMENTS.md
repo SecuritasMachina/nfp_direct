@@ -998,6 +998,21 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 106 — Type Badges as Filter Links (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**, **`Search.cshtml`**, **`Details.cshtml`**
+- Changed type badges from `<span class="badge bg-secondary">` to `<a class="badge bg-secondary text-decoration-none" href="/?type=...">` on all three pages
+- Clicking the badge now navigates to the Browse page filtered by that type code
+
+### Impact
+- Every place a type badge appears (card list items in Browse and Search, org detail header) is now a direct navigation to all organizations of that type
+- Promotes type-filtered discovery from any context without requiring the user to find the filter UI
+- 165 tests passing
+
+---
+
 ## Iteration 105 — Type Filter on Search Page (2026-05-16)
 
 ### Changes

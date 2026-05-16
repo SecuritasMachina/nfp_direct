@@ -106,7 +106,9 @@ else
                 <small class="text-muted">EIN: @TypeCodeHelper.FormatEin(Model.Id)</small>
                 @if (pub.TypeCode != null)
                 {
-                    <span class="badge bg-secondary ms-2" title="IRC 501(c)(@pub.TypeCode)">@TypeCodeHelper.Label(pub.TypeCode)</span>
+                    <a class="badge bg-secondary text-decoration-none ms-2"
+                       title="IRC 501(c)(@pub.TypeCode)"
+                       href="/?type=@Uri.EscapeDataString(pub.TypeCode)">@TypeCodeHelper.Label(pub.TypeCode)</a>
                 }
                 <a class="btn btn-sm btn-outline-primary ms-2" target="_blank" rel="noopener noreferrer"
                    href="https://news.google.com/search?q=@Uri.EscapeDataString(string.Join(" ", new[]{pub.CompanyName ?? name, pub.City}.Where(s => !string.IsNullOrWhiteSpace(s))))">

@@ -147,7 +147,9 @@
                 @if (TypeCodeHelper.ShouldShowCountry(entry.Pub78.Country)) { <text>· @entry.Pub78.Country</text> }
                 @if (entry.Pub78.TypeCode != null)
                 {
-                    <span class="badge bg-secondary ms-1" title="IRC 501(c)(@entry.Pub78.TypeCode)">@TypeCodeHelper.Label(entry.Pub78.TypeCode)</span>
+                    <a class="badge bg-secondary text-decoration-none ms-1"
+                       title="IRC 501(c)(@entry.Pub78.TypeCode)"
+                       href="/?type=@Uri.EscapeDataString(entry.Pub78.TypeCode)">@TypeCodeHelper.Label(entry.Pub78.TypeCode)</a>
                 }
                 @if (TypeCodeHelper.YesNo(entry.Postcard?.Terminated) == "Yes")
                 {
