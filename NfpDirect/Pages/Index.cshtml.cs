@@ -24,11 +24,12 @@ public class IndexModel : PageModel
     public int PageNumber { get; private set; }
     public bool HasNextPage { get; private set; }
     public string StateFilter { get; private set; } = "";
+    public string TypeFilter { get; private set; } = "";
     public long TotalCount { get; private set; }
     public long TotalPages { get; private set; }
     public List<IndexEntry> Entries { get; private set; } = [];
 
-    public async Task<IActionResult> OnGetAsync([FromQuery] string? page, [FromQuery] string? state)
+    public async Task<IActionResult> OnGetAsync([FromQuery] string? page, [FromQuery] string? state, [FromQuery] string? type)
     {
         if (!int.TryParse(page, out var pageNum) || pageNum < 0)
             pageNum = 0;
@@ -36,10 +37,15 @@ public class IndexModel : PageModel
         StateFilter = (state ?? "").Trim().ToUpper();
         if (StateFilter.Length != 2 || !StateFilter.All(char.IsLetter))
             StateFilter = "";
+        TypeFilter = (type ?? "").Trim();
+        if (!NfpDirect.Helpers.TypeCodeHelper.Labels.ContainsKey(TypeFilter))
+            TypeFilter = "";
 
         var queryable = _db.Pub78.AsNoTracking();
         if (StateFilter.Length > 0)
             queryable = queryable.Where(p => p.State == StateFilter);
+        if (TypeFilter.Length > 0)
+            queryable = queryable.Where(p => p.TypeCode == TypeFilter);
 
         TotalCount = await queryable.LongCountAsync();
         TotalPages = (TotalCount + PageSize - 1) / PageSize;

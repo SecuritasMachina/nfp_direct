@@ -60,7 +60,7 @@ builder.Services.AddOutputCache(opts =>
     opts.AddBasePolicy(p => p.NoCache());
     opts.AddPolicy("BrowsePage", p => p
         .Expire(TimeSpan.FromSeconds(60))
-        .SetVaryByQuery("page", "state")
+        .SetVaryByQuery("page", "state", "type")
         .Tag("browse"));
     opts.AddPolicy("DetailsPage", p => p
         .Expire(TimeSpan.FromSeconds(30))
