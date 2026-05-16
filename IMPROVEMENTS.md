@@ -998,6 +998,22 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 103 — Browse by Type Grid on Home Page (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**
+- Added "Browse by Type" section below "Browse by State" on the unfiltered home page (page 0, no state, no type filter)
+- Displays all known IRC 501(c) type codes as linked buttons, sorted alphabetically by label
+- Condition for both grids now includes `Model.TypeFilter.Length == 0` so they hide when a type filter is active (only relevant content remains visible)
+
+### Impact
+- Users landing on the home page can discover the type filter without knowing it exists — a direct path from the home page to e.g. "Public Charity" or "Social Welfare" orgs
+- Consistent UX with the existing state grid
+- 162 tests passing
+
+---
+
 ## Iteration 102 — Sitemap.xml Endpoint (2026-05-16)
 
 ### Changes
