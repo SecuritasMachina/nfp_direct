@@ -72,7 +72,9 @@
     <div class="card mb-2">
         <div class="card-body py-2">
             <h5 class="card-title mb-1">
-                @TypeCodeHelper.TitleCase(pc.CompanyName)
+                <a href="/Details?id=@Uri.EscapeDataString(pc.Id)&back=@bypcBackUrl" class="text-decoration-none">
+                    @TypeCodeHelper.TitleCase(pc.CompanyName)
+                </a>
                 <small class="text-muted ms-1">EIN: @TypeCodeHelper.FormatEin(pc.Id)</small>
                 <small class="text-muted ms-1">@pc.Year</small>
             </h5>
