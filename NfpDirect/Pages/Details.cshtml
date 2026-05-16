@@ -33,7 +33,7 @@ else
                 {
                     <span class="badge bg-secondary ms-2" title="IRC 501(c)(@pub.TypeCode)">@TypeCodeHelper.Label(pub.TypeCode)</span>
                 }
-                <a class="btn btn-sm btn-outline-primary ms-2" target="_blank"
+                <a class="btn btn-sm btn-outline-primary ms-2" target="_blank" rel="noopener noreferrer"
                    href="https://news.google.com/search?q=@Uri.EscapeDataString((pub.CompanyName ?? name) + " " + (pub.City ?? ""))">
                     <i class="fab fa-google" aria-hidden="true"></i> News
                 </a>
@@ -63,7 +63,7 @@ else
                     <h6>Doing Business As:</h6>
                     <p>
                         @TypeCodeHelper.TitleCase(pc.DBA1)
-                        <a class="btn btn-sm btn-outline-primary ms-1" target="_blank"
+                        <a class="btn btn-sm btn-outline-primary ms-1" target="_blank" rel="noopener noreferrer"
                            href="https://news.google.com/search?q=@Uri.EscapeDataString(pc.DBA1 ?? "")">DBA News</a><br />
                         @if (!string.IsNullOrWhiteSpace(pc.DBA2)) { @TypeCodeHelper.TitleCase(pc.DBA2)<br /> }
                         @if (!string.IsNullOrWhiteSpace(pc.DBA3)) { @TypeCodeHelper.TitleCase(pc.DBA3)<br /> }
@@ -72,11 +72,11 @@ else
 
                 <h6>Officer Information:</h6>
                 <address>
-                    <a target="_blank"
+                    <a target="_blank" rel="noopener noreferrer"
                        href="https://www.google.com/search?q=@Uri.EscapeDataString((pc.OfficerName ?? "") + " " + pc.OfficerAddressCity)">
                         @TypeCodeHelper.TitleCase(pc.OfficerName)
                     </a>
-                    <a class="btn btn-sm btn-outline-primary ms-1" target="_blank"
+                    <a class="btn btn-sm btn-outline-primary ms-1" target="_blank" rel="noopener noreferrer"
                        href="https://news.google.com/search?q=@Uri.EscapeDataString((pc.OfficerName ?? "") + " " + pc.OfficerAddressCity)">
                         News
                     </a><br />
@@ -98,19 +98,19 @@ else
                     @if (!string.IsNullOrWhiteSpace(pc.WebsiteURL) &&
                          !pc.WebsiteURL.Equals("n/a", StringComparison.OrdinalIgnoreCase))
                     {
-                        <a class="btn btn-outline-primary me-2" target="_blank" href="@(pc.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? pc.WebsiteURL : "http://" + pc.WebsiteURL)">
+                        <a class="btn btn-outline-primary me-2" target="_blank" rel="noopener noreferrer" href="@(pc.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? pc.WebsiteURL : "http://" + pc.WebsiteURL)">
                             <i class="fa fa-globe" aria-hidden="true"></i> Website (@pc.WebsiteURL)
                         </a>
                     }
                     else
                     {
                         <span class="text-muted me-2">No website found.</span>
-                        <a class="btn btn-outline-secondary me-2" target="_blank"
+                        <a class="btn btn-outline-secondary me-2" target="_blank" rel="noopener noreferrer"
                            href="https://www.google.com/search?q=@Uri.EscapeDataString(pc.CompanyName ?? "")">
                             <i class="fab fa-google" aria-hidden="true"></i> Try Google
                         </a>
                     }
-                    <a class="btn btn-outline-primary" target="_blank"
+                    <a class="btn btn-outline-primary" target="_blank" rel="noopener noreferrer"
                        href="https://www.google.com/search?q=@Uri.EscapeDataString(pc.CompanyName ?? "")">
                         <i class="fab fa-google" aria-hidden="true"></i> Google @pc.CompanyName
                     </a>
