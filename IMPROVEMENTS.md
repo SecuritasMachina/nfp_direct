@@ -910,3 +910,28 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 ### Impact
 - `IsEinLike` is the gate for the EIN auto-redirect path; now has full edge case coverage
 - Tab title: users with multiple search tabs can now see result counts without switching
+
+---
+
+## Iteration 39 — Location Formatting Helpers, Country Suppression (2026-05-16)
+
+### Changes
+
+**`TypeCodeHelper.FormatLocation()` and `TypeCodeHelper.ShouldShowCountry()`** (`Helpers/TypeCodeHelper.cs`)
+- `FormatLocation(city, state)` — joins non-null/non-whitespace city and state with ", "; returns "" if both absent
+- `ShouldShowCountry(country)` — returns false for null, empty, "US", "USA", "United States" (case-insensitive)
+- Fixes the display bug: `@city@(state != null ? ", " + state : "")` rendered `, IL` when city was null
+
+**Location display updated** (`Index.cshtml`, `Search.cshtml`, `Details.cshtml`)
+- All three pages replaced the inline city+state+country expression with the new helpers
+- Country now hidden for domestic (US) organizations — eliminates the visual noise of "US" on every card
+- Foreign orgs still show their country, separated by `·`
+
+**Tests** (`NfpDirect.Tests/TypeCodeHelperTests.cs`)
+- 11 new tests: FormatLocation (both, city-only, state-only, both-null, both-whitespace) and ShouldShowCountry (null, US, USA, United States, Canada, empty)
+- Test suite: 92 → 103 passing tests
+
+### Impact
+- Bug fix: null city no longer renders as `, IL` (missing city with comma artifact)
+- UX: ` US` text removed from every domestic org card; foreign country shown only when relevant
+- Code: duplicated 3-part inline expression → 2 testable helper methods

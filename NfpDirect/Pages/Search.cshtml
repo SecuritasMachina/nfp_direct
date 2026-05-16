@@ -92,8 +92,8 @@
                         <small class="text-muted ms-2">EIN: @TypeCodeHelper.FormatEin(r.Pub78.EIN)</small>
                     </h5>
                     <div class="text-muted small">
-                        @r.Pub78.City@(r.Pub78.State != null ? ", " + r.Pub78.State : "")
-                        @r.Pub78.Country
+                        @TypeCodeHelper.FormatLocation(r.Pub78.City, r.Pub78.State)
+                        @if (TypeCodeHelper.ShouldShowCountry(r.Pub78.Country)) { <text>· @r.Pub78.Country</text> }
                         @if (r.Pub78.TypeCode != null)
                         {
                             <span class="badge bg-secondary ms-1"
