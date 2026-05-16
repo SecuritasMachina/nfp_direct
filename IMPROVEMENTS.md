@@ -998,6 +998,23 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 70 — Precise Canonical URLs for Browse and ByPostcard Pages (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**
+- Sets `ViewData["CanonicalUrl"]` to the exact URL for this page+state combination
+- Page 0, no state → `/` (clean home URL)
+- Page 0, with state → `/?state=IL`
+- Page N → `/?page=N&state=IL`
+
+**`NfpDirect/Pages/ByPostcard.cshtml`**
+- Same canonical logic for the ByPostcard page
+
+### Impact
+- **Before**: every Browse page (all states, all page numbers) had canonical `/`; every ByPostcard page had canonical `/ByPostcard` — state-filtered and paginated variants were treated as duplicates
+- **After**: each distinct URL has its own canonical, enabling proper crawl budget allocation and deduplication
+
 ## Iteration 69 — Fix Details Canonical URL; Add noindex to Search (2026-05-16)
 
 ### Changes
