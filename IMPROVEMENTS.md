@@ -998,6 +998,21 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 49 — `rel="prev"` / `rel="next"` Pagination Link Elements (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Shared/_Layout.cshtml`**
+- Added `@RenderSection("Head", required: false)` before theme-color meta tag, providing a named `Head` section for pages to inject `<head>` elements
+
+**`NfpDirect/Pages/Index.cshtml`** and **`NfpDirect/Pages/ByPostcard.cshtml`**
+- Added `@section Head {}` with conditional `<link rel="prev">` and `<link rel="next">` elements pointing to adjacent pages (including state filter query param when active)
+
+### Impact
+- Search engines can follow the pagination chain for the full org list
+- Helps crawlers discover all pages rather than only indexing page 1
+- State filter is preserved in the prev/next links so crawlers follow the correct filtered series
+
 ## Iteration 48 — `noindex` Meta Tag on Error Pages (2026-05-16)
 
 ### Changes
