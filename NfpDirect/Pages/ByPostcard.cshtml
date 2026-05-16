@@ -77,10 +77,10 @@
                href="/Details?id=@Uri.EscapeDataString(pc.Id)&back=@bypcBackUrl">
                 Details
             </a>
-            @if (!string.IsNullOrWhiteSpace(pc.WebsiteURL) &&
-                 !pc.WebsiteURL.Equals("n/a", StringComparison.OrdinalIgnoreCase))
+            @{var bypcSiteUrl = TypeCodeHelper.NormalizeUrl(pc.WebsiteURL);}
+            @if (bypcSiteUrl != null)
             {
-                <a class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener noreferrer" href="@(pc.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? pc.WebsiteURL : "http://" + pc.WebsiteURL)">
+                <a class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener noreferrer" href="@bypcSiteUrl">
                     <i class="fa fa-globe" aria-hidden="true"></i> Website
                 </a>
             }

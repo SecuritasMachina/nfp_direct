@@ -844,3 +844,27 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 ### Impact
 - Preconnect: reduces CDN resource load time by eliminating DNS lookup + TCP + TLS setup on first request
 - `aria-current`: screen reader users hear which nav link is the current page without inferring from styling
+
+---
+
+## Iteration 36 — `NormalizeUrl` Helper, URL Scheme Validation (2026-05-16)
+
+### Changes
+
+**`TypeCodeHelper.NormalizeUrl()`** (`Helpers/TypeCodeHelper.cs`)
+- New helper centralizes website URL normalization: returns `null` for blank/n/a URLs, passes through `http://`/`https://` URLs, rejects any URL with a non-http scheme (ftp://, javascript:, data:), and prepends `http://` for bare domain names
+- Detection logic: colon at position before any slash → treat as scheme → reject
+- Previously: `StartsWith("http")` check was duplicated in 4 pages and accepted `ftp://` URLs (rendered as-is → broken link)
+
+**All 4 pages updated** (`Index.cshtml`, `Search.cshtml`, `ByPostcard.cshtml`, `Details.cshtml`)
+- Replaced 4 copies of the inline URL normalization expression with `TypeCodeHelper.NormalizeUrl()`
+- Eliminates the code duplication and fixes the `ftp://` broken-link bug
+
+**NormalizeUrl unit tests** (`NfpDirect.Tests/TypeCodeHelperTests.cs`)
+- 10 new tests: null, empty, n/a, mixed-case N/A, https, http, bare domain, ftp://, javascript:, data:
+- Test suite: 61 → 71 passing tests
+
+### Impact
+- `ftp://` URLs: were rendered as `ftp://` (broken link); now show Google Search fallback
+- `javascript:` / `data:` URLs: were broken `http://javascript:...`; now show Google Search fallback
+- Code duplication: 4 copies of 3-line URL check → 1 centralized helper
