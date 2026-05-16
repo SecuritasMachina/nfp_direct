@@ -998,6 +998,21 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 59 — Null CompanyName Fallback in Index/ByPostcard Google Search Links (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**
+- "Search Google" link: `pc.CompanyName ?? ""` → `pc.CompanyName ?? entry.Pub78.CompanyName ?? ""`
+- Falls back to the Pub78 record's company name if the postcard's name is null
+
+**`NfpDirect/Pages/ByPostcard.cshtml`**
+- "Search Google" link: `pc.CompanyName ?? ""` → `pc.CompanyName ?? pc.Id`
+- Falls back to the EIN (postcard ID) if company name is null — always produces a meaningful query
+
+### Impact
+- Google Search links now always have a meaningful query even when `CompanyName` is null in the postcard record
+
 ## Iteration 58 — ByPostcard Org Name Linked to Details (2026-05-16)
 
 ### Changes
