@@ -58,7 +58,7 @@ else
     var pub = Model.Pub78;
     <div class="card mb-3">
         <div class="card-body">
-            <h4 class="card-title">
+            <h1 class="h4 card-title">
                 @name
                 <small class="text-muted">EIN: @TypeCodeHelper.FormatEin(Model.Id)</small>
                 @if (pub.TypeCode != null)
@@ -73,7 +73,7 @@ else
                 {
                     <a class="btn btn-sm btn-outline-secondary ms-1" href="#filing">Filing ↓</a>
                 }
-            </h4>
+            </h1>
 
             @if (Model.Postcard != null)
             {
@@ -84,7 +84,7 @@ else
                         <span class="badge bg-danger">Terminated</span>
                     </div>
                 }
-                @if (pc.Year.HasValue) { <h6 class="text-muted">Year: @pc.Year</h6> }
+                @if (pc.Year.HasValue) { <h2 class="h6 text-muted">Year: @pc.Year</h2> }
 
                 <address>
                     @if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine1)) { @pc.OrgAddressLine1<br /> }
@@ -98,7 +98,7 @@ else
 
                 @if (!string.IsNullOrWhiteSpace(pc.DBA1))
                 {
-                    <h6>Doing Business As:</h6>
+                    <h2 class="h6">Doing Business As:</h2>
                     <p>
                         @TypeCodeHelper.TitleCase(pc.DBA1)
                         <a class="btn btn-sm btn-outline-primary ms-1" target="_blank" rel="noopener noreferrer"
@@ -108,7 +108,7 @@ else
                     </p>
                 }
 
-                <h6>Officer Information:</h6>
+                <h2 class="h6">Officer Information:</h2>
                 <address>
                     @{var officerQuery = string.Join(" ", new[]{pc.OfficerName, pc.OfficerAddressCity}.Where(s => !string.IsNullOrWhiteSpace(s)));}
                     @if (!string.IsNullOrWhiteSpace(pc.OfficerName))
