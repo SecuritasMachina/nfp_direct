@@ -83,7 +83,7 @@
                 <div class="text-muted small">DBA: @pc.DBA1</div>
             }
             <address class="small mb-1">
-                @pc.OrgAddressLine1<br />
+                @if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine1)) { @pc.OrgAddressLine1<br /> }
                 @if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine2))
                 {
                     @pc.OrgAddressLine2<br />
