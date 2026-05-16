@@ -237,6 +237,25 @@ public class TypeCodeHelperTests
     public void NormalizeUrl_NoScheme_PrependsHttps() =>
         Assert.Equal("https://example.org", TypeCodeHelper.NormalizeUrl("example.org"));
 
+    [Theory]
+    [InlineData("NONE")]
+    [InlineData("none")]
+    [InlineData("N/A")]
+    [InlineData("NA")]
+    [InlineData("NO")]
+    [InlineData("NO WEBSITE")]
+    [InlineData("WWW")]
+    [InlineData("HTTP")]
+    [InlineData("HTTPS")]
+    [InlineData("NOT AVAILABLE")]
+    [InlineData("TBD")]
+    public void NormalizeUrl_GarbageValues_ReturnsNull(string garbage) =>
+        Assert.Null(TypeCodeHelper.NormalizeUrl(garbage));
+
+    [Fact]
+    public void NormalizeUrl_NoDotBareWord_ReturnsNull() =>
+        Assert.Null(TypeCodeHelper.NormalizeUrl("CHARITY"));
+
     [Fact]
     public void NormalizeUrl_FtpScheme_ReturnsNull() =>
         Assert.Null(TypeCodeHelper.NormalizeUrl("ftp://files.example.org"));
