@@ -998,6 +998,22 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 44 — EIN Redirect Preserves State Filter in Back URL (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Search.cshtml.cs`**
+- EIN auto-redirect back URL now includes `&state=XX` when a state filter was active
+- **Bug**: Searching with an EIN + state filter (e.g., `q=123456789&state=IL`) redirected to Details with `back=/Search?q=123456789` — clicking "← Back" lost the state filter and returned to a different result set
+- **Fix**: `backUrl` appended with `&state=Uri.EscapeDataString(StateFilter)` when `StateFilter.Length > 0`
+
+**`NfpDirect.Tests/SearchModelTests.cs`**
+- Added `EinSearch_WithStateFilter_BackUrlIncludesState` test (110 total)
+
+### Impact
+- "← Back" from EIN-redirected detail pages now returns to the exact same filtered search
+- No behavioral change when no state filter is active
+
 ## Iteration 43 — Details Cache Bug Fix: Vary by `back` Query Param (2026-05-16)
 
 ### Changes
