@@ -1,0 +1,132 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = $"Browse Non-Profits — Page {Model.PageNumber + 1}";
+    ViewData["Description"] = "Browse IRS-registered non-profit organizations by name. Search by organization name, 9-digit EIN, or filter by state.";
+    var indexBackUrl = Uri.EscapeDataString("/" + (ViewContext.HttpContext.Request.QueryString.Value ?? ""));
+    var stateQs = Model.StateFilter.Length > 0 ? $"&state={Uri.EscapeDataString(Model.StateFilter)}" : "";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h4 class="mb-0">Non-Profit Organizations — Page @(Model.PageNumber + 1)</h4>
+    <div>
+        @if (Model.PageNumber > 0)
+        {
+            <a class="btn btn-outline-primary me-1" href="/?page=@(Model.PageNumber - 1)@stateQs">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i> Previous
+            </a>
+        }
+        @if (Model.HasNextPage)
+        {
+            <a class="btn btn-outline-primary" href="/?page=@(Model.PageNumber + 1)@stateQs">
+                Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </a>
+        }
+    </div>
+</div>
+
+<form method="get" action="/" class="mb-3">
+    <div class="input-group input-group-sm" style="max-width:220px">
+        <input type="search" name="state" class="form-control" placeholder="Filter by state (e.g. IL)"
+               maxlength="2" value="@Model.StateFilter" aria-label="Filter by state"
+               list="us-states" autocomplete="off" />
+        <button class="btn btn-outline-secondary" type="submit">Filter</button>
+        @if (Model.StateFilter.Length > 0)
+        {
+            <a class="btn btn-outline-secondary" href="/">Clear</a>
+        }
+    </div>
+</form>
+
+@if (!Model.Entries.Any())
+{
+    <div class="alert alert-info">
+        @if (Model.StateFilter.Length > 0)
+        {
+            <text>No organizations found in state <strong>@Model.StateFilter</strong>.
+            <a href="/">Clear filter</a> to browse all states.</text>
+        }
+        else
+        {
+            <text>No organizations found. The database may still be loading.</text>
+        }
+    </div>
+}
+@foreach (var entry in Model.Entries)
+{
+    <div class="card mb-2">
+        <div class="card-body py-2">
+            <h5 class="card-title mb-1">
+                <a href="/Details?id=@Uri.EscapeDataString(entry.Pub78.EIN)&back=@indexBackUrl" class="text-decoration-none">
+                    @TypeCodeHelper.TitleCase(entry.Pub78.CompanyName)
+                </a>
+                <small class="text-muted ms-2">EIN: @TypeCodeHelper.FormatEin(entry.Pub78.EIN)</small>
+            </h5>
+            <div class="text-muted small">
+                @entry.Pub78.City@(entry.Pub78.State != null ? ", " + entry.Pub78.State : "")
+                @entry.Pub78.Country
+                @if (entry.Pub78.TypeCode != null)
+                {
+                    <span class="badge bg-secondary ms-1" title="IRC 501(c)(@entry.Pub78.TypeCode)">@TypeCodeHelper.Label(entry.Pub78.TypeCode)</span>
+                }
+            </div>
+            @if (entry.Postcard != null)
+            {
+                var pc = entry.Postcard;
+                <div class="mt-1">
+                    @if (!string.IsNullOrWhiteSpace(pc.DBA1))
+                    {
+                        <span class="text-muted small">DBA: @pc.DBA1</span>
+                    }
+                    <address class="mb-1 small">
+                        @pc.OrgAddressLine1<br />
+                        @if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine2))
+                        {
+                            @pc.OrgAddressLine2<br />
+                        }
+                        @pc.OrgCity, @pc.OrgState @pc.OrgPostalCode<br />
+                        @pc.OrgCountry
+                    </address>
+                    @if (!string.IsNullOrWhiteSpace(pc.WebsiteURL) &&
+                         !pc.WebsiteURL.Equals("n/a", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <a class="btn btn-sm btn-outline-primary me-1" target="_blank"
+                           href="@(pc.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? pc.WebsiteURL : "http://" + pc.WebsiteURL)">
+                            <i class="fa fa-globe" aria-hidden="true"></i> Website
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-sm btn-outline-secondary me-1" target="_blank"
+                           href="https://www.google.com/search?q=@Uri.EscapeDataString(pc.CompanyName ?? "")">
+                            <i class="fab fa-google" aria-hidden="true"></i> Search Google
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<div class="d-flex justify-content-between mt-3 mb-4">
+    @if (Model.PageNumber > 0)
+    {
+        <a class="btn btn-outline-primary" href="/?page=@(Model.PageNumber - 1)@stateQs">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i> Previous
+        </a>
+    }
+    else
+    {
+        <span></span>
+    }
+    @if (Model.HasNextPage)
+    {
+        <a class="btn btn-outline-primary" href="/?page=@(Model.PageNumber + 1)@stateQs">
+            Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </a>
+    }
+    else
+    {
+        <span></span>
+    }
+</div>

@@ -1,0 +1,45 @@
+body {
+    font-size: .875rem;
+}
+
+.card {
+    border-radius: 0.375rem;
+    transition: box-shadow 0.15s ease;
+}
+
+.card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+address {
+    margin-bottom: 0.25rem;
+}
+
+.footer {
+    font-size: 0.8rem;
+}
+
+dl.row dt, dl.row dd {
+    padding: 0.2rem 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 0;
+}
+
+@media (max-width: 576px) {
+    dl.row dt {
+        font-weight: 600;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    dl.row dd {
+        padding-top: 0;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media print {
+    nav, form, .btn, footer { display: none !important; }
+    .card { border: 1px solid #ccc !important; box-shadow: none !important; }
+    a[href]::after { content: none; }
+    body { font-size: 11pt; }
+}

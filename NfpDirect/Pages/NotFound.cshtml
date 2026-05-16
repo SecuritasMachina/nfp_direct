@@ -1,0 +1,14 @@
+@page "/404"
+@model NotFoundModel
+@{
+    ViewData["Title"] = "Page Not Found";
+    Response.StatusCode = 404;
+}
+
+<div class="text-center py-5">
+    <h1 class="display-4 text-muted">404</h1>
+    <p class="lead">That page doesn't exist.</p>
+    <a href="/" class="btn btn-primary">Back to Organizations</a>
+    &nbsp;
+    <a href="/Search" class="btn btn-outline-secondary">Search</a>
+</div>

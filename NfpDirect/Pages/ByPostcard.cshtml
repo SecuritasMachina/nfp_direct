@@ -1,0 +1,119 @@
+@page
+@model ByPostcardModel
+@{
+    ViewData["Title"] = $"Browse by Postcard — Page {Model.PageNumber + 1}";
+    ViewData["Description"] = "Browse non-profit organizations with IRS Form 990-N (e-Postcard) filings.";
+    var bypcBackUrl = Uri.EscapeDataString("/ByPostcard" + (ViewContext.HttpContext.Request.QueryString.Value ?? ""));
+    var stateQs = Model.StateFilter.Length > 0 ? $"&state={Uri.EscapeDataString(Model.StateFilter)}" : "";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h4 class="mb-0">Browse by Postcard — Page @(Model.PageNumber + 1)</h4>
+    <div>
+        @if (Model.PageNumber > 0)
+        {
+            <a class="btn btn-outline-primary me-1" href="/ByPostcard?page=@(Model.PageNumber - 1)@stateQs">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i> Previous
+            </a>
+        }
+        @if (Model.HasNextPage)
+        {
+            <a class="btn btn-outline-primary" href="/ByPostcard?page=@(Model.PageNumber + 1)@stateQs">
+                Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </a>
+        }
+    </div>
+</div>
+
+<form method="get" action="/ByPostcard" class="mb-3">
+    <div class="input-group input-group-sm" style="max-width:220px">
+        <input type="search" name="state" class="form-control" placeholder="Filter by state (e.g. IL)"
+               maxlength="2" value="@Model.StateFilter" aria-label="Filter by state"
+               list="us-states" autocomplete="off" />
+        <button class="btn btn-outline-secondary" type="submit">Filter</button>
+        @if (Model.StateFilter.Length > 0)
+        {
+            <a class="btn btn-outline-secondary" href="/ByPostcard">Clear</a>
+        }
+    </div>
+</form>
+
+@if (!Model.Postcards.Any())
+{
+    <div class="alert alert-info">
+        @if (Model.StateFilter.Length > 0)
+        {
+            <text>No postcard filings found in state <strong>@Model.StateFilter</strong>.
+            <a href="/ByPostcard">Clear filter</a> to browse all states.</text>
+        }
+        else
+        {
+            <text>No postcard filings found. The database may still be loading.</text>
+        }
+    </div>
+}
+@foreach (var pc in Model.Postcards)
+{
+    <div class="card mb-2">
+        <div class="card-body py-2">
+            <h5 class="card-title mb-1">
+                @TypeCodeHelper.TitleCase(pc.CompanyName)
+                <small class="text-muted">@pc.Year</small>
+            </h5>
+            @if (!string.IsNullOrWhiteSpace(pc.DBA1))
+            {
+                <div class="text-muted small">DBA: @pc.DBA1</div>
+            }
+            <address class="small mb-1">
+                @pc.OrgAddressLine1<br />
+                @if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine2))
+                {
+                    @pc.OrgAddressLine2<br />
+                }
+                @pc.OrgCity, @pc.OrgState @pc.OrgPostalCode<br />
+                @pc.OrgCountry
+            </address>
+            <a class="btn btn-sm btn-outline-primary me-1"
+               href="/Details?id=@Uri.EscapeDataString(pc.Id)&back=@bypcBackUrl">
+                Details
+            </a>
+            @if (!string.IsNullOrWhiteSpace(pc.WebsiteURL) &&
+                 !pc.WebsiteURL.Equals("n/a", StringComparison.OrdinalIgnoreCase))
+            {
+                <a class="btn btn-sm btn-outline-primary" target="_blank" href="@(pc.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? pc.WebsiteURL : "http://" + pc.WebsiteURL)">
+                    <i class="fa fa-globe" aria-hidden="true"></i> Website
+                </a>
+            }
+            else
+            {
+                <a class="btn btn-sm btn-outline-secondary" target="_blank"
+                   href="https://www.google.com/search?q=@Uri.EscapeDataString(pc.CompanyName ?? "")">
+                    <i class="fab fa-google" aria-hidden="true"></i> Search Google
+                </a>
+            }
+        </div>
+    </div>
+}
+
+<div class="d-flex justify-content-between mt-3 mb-4">
+    @if (Model.PageNumber > 0)
+    {
+        <a class="btn btn-outline-primary" href="/ByPostcard?page=@(Model.PageNumber - 1)@stateQs">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i> Previous
+        </a>
+    }
+    else
+    {
+        <span></span>
+    }
+    @if (Model.HasNextPage)
+    {
+        <a class="btn btn-outline-primary" href="/ByPostcard?page=@(Model.PageNumber + 1)@stateQs">
+            Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </a>
+    }
+    else
+    {
+        <span></span>
+    }
+</div>

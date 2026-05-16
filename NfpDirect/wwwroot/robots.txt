@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /ByPostcard
+Disallow: /Search
+Crawl-delay: 2
+
+Sitemap: https://nfpdirect.ackdev.com/sitemap.xml

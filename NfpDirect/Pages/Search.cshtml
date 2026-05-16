@@ -1,0 +1,141 @@
+@page
+@model SearchModel
+@{
+    ViewData["Title"] = Model.Query.Length > 0
+        ? $"Search: {Model.Query}"
+        : "Search";
+}
+
+<h4 class="mb-3">Search Non-Profit Organizations</h4>
+
+<form method="get" action="/Search" class="mb-4">
+    <div class="row g-2">
+        <div class="col-sm-8 col-lg-9">
+            <input type="search" name="q" class="form-control form-control-lg"
+                   placeholder="Organization name or 9-digit EIN…"
+                   value="@Model.Query" autofocus />
+        </div>
+        <div class="col-sm-3 col-lg-2">
+            <input type="search" name="state" class="form-control form-control-lg"
+                   placeholder="State (e.g. IL)"
+                   maxlength="2"
+                   value="@Model.StateFilter"
+                   list="us-states" autocomplete="off" />
+        </div>
+        <div class="col-sm-1">
+            <button type="submit" class="btn btn-primary btn-lg w-100">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="form-text">
+        Search by name (partial match), 9-digit EIN, or filter by 2-letter state code.
+    </div>
+</form>
+
+@{
+    var stateParam = Model.StateFilter.Length > 0
+        ? $"&state={Uri.EscapeDataString(Model.StateFilter)}"
+        : "";
+    var searchBackUrl = Uri.EscapeDataString("/Search" + (ViewContext.HttpContext.Request.QueryString.Value ?? ""));
+}
+@if (Model.Query.Length > 0 || Model.StateFilter.Length > 0)
+{
+    if (Model.TotalResults == 0)
+    {
+        <div class="alert alert-info">
+            No organizations found
+            @if (Model.Query.Length > 0) { <text>matching "<strong>@Model.Query</strong>"</text> }
+            @if (Model.StateFilter.Length > 0) { <text>in state <strong>@Model.StateFilter</strong></text> }.
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted small">
+                @Model.TotalResults result@(Model.TotalResults == 1 ? "" : "s")
+                @if (Model.Query.Length > 0) { <text>for "<strong>@Model.Query</strong>"</text> }
+                @if (Model.StateFilter.Length > 0) { <text>in <strong>@Model.StateFilter</strong></text> }
+                — page @(Model.PageNumber + 1) of @Model.TotalPages
+            </span>
+            <div>
+                @if (Model.PageNumber > 0)
+                {
+                    <a class="btn btn-sm btn-outline-primary me-1"
+                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam&page=@(Model.PageNumber - 1)">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i> Prev
+                    </a>
+                }
+                @if (Model.PageNumber < Model.TotalPages - 1)
+                {
+                    <a class="btn btn-sm btn-outline-primary"
+                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam&page=@(Model.PageNumber + 1)">
+                        Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                }
+            </div>
+        </div>
+
+        @foreach (var r in Model.Results)
+        {
+            <div class="card mb-2">
+                <div class="card-body py-2">
+                    <h5 class="card-title mb-1">
+                        <a href="/Details?id=@Uri.EscapeDataString(r.Pub78.EIN)&back=@searchBackUrl"
+                           class="text-decoration-none">
+                            @TypeCodeHelper.TitleCase(r.Pub78.CompanyName)
+                        </a>
+                        <small class="text-muted ms-2">EIN: @TypeCodeHelper.FormatEin(r.Pub78.EIN)</small>
+                    </h5>
+                    <div class="text-muted small">
+                        @r.Pub78.City@(r.Pub78.State != null ? ", " + r.Pub78.State : "")
+                        @r.Pub78.Country
+                        @if (r.Pub78.TypeCode != null)
+                        {
+                            <span class="badge bg-secondary ms-1"
+                                  title="IRC 501(c)(@r.Pub78.TypeCode)">@TypeCodeHelper.Label(r.Pub78.TypeCode)</span>
+                        }
+                    </div>
+                    @if (r.Postcard != null && !string.IsNullOrWhiteSpace(r.Postcard.WebsiteURL)
+                         && !r.Postcard.WebsiteURL.Equals("n/a", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <div class="mt-1">
+                            <a class="btn btn-sm btn-outline-primary" target="_blank"
+                               href="@(r.Postcard.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? r.Postcard.WebsiteURL : "http://" + r.Postcard.WebsiteURL)">
+                                <i class="fa fa-globe" aria-hidden="true"></i> @r.Postcard.WebsiteURL
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.TotalPages > 1)
+        {
+            <div class="d-flex justify-content-between mt-3 mb-4">
+                @if (Model.PageNumber > 0)
+                {
+                    <a class="btn btn-outline-primary"
+                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam&page=@(Model.PageNumber - 1)">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i> Previous
+                    </a>
+                }
+                else
+                {
+                    <span></span>
+                }
+                @if (Model.PageNumber < Model.TotalPages - 1)
+                {
+                    <a class="btn btn-outline-primary"
+                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam&page=@(Model.PageNumber + 1)">
+                        Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                }
+                else
+                {
+                    <span></span>
+                }
+            </div>
+        }
+    }
+}
