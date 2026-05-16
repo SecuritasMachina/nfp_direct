@@ -44,6 +44,13 @@ public static class TypeCodeHelper
             ? new DateTime(yr, mo, 1).ToString("MMM yyyy")
             : tp ?? "";
 
+    public static string? TaxPeriodDatetime(string? tp) =>
+        tp is { Length: 6 } &&
+        int.TryParse(tp[..4], out var yr) &&
+        int.TryParse(tp[4..], out var mo) && mo is >= 1 and <= 12
+            ? $"{yr:D4}-{mo:D2}"
+            : null;
+
     public static string YesNo(string? v) => v?.Trim().ToUpperInvariant() switch
     {
         "Y" or "1" or "TRUE" => "Yes",

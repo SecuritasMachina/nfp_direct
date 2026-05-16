@@ -998,6 +998,24 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 76 — Semantic `<time>` Element for Tax Period on Details (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Helpers/TypeCodeHelper.cs`**
+- Added `TaxPeriodDatetime(string? tp)` — returns ISO 8601 `YYYY-MM` format from a `YYYYMM` tax period string, or null if invalid
+
+**`NfpDirect/Pages/Details.cshtml`**
+- Tax period in Filing Details now wrapped: `<time datetime="2023-12">Dec 2023</time>`
+- Falls back to plain text if the value cannot be parsed (invalid or null TaxPd)
+
+**`NfpDirect.Tests/TypeCodeHelperTests.cs`**
+- Added 9 tests for `TaxPeriodDatetime`: valid inputs, invalid formats, null, zero month, out-of-range month
+
+### Impact
+- Machine-readable date enables search engine structured data extraction, accessibility tools, and browser date features
+- 134 tests passing
+
 ## Iteration 75 — Cross-Origin Isolation Security Headers (2026-05-16)
 
 ### Changes

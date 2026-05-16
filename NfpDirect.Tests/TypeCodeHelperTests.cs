@@ -241,6 +241,24 @@ public class TypeCodeHelperTests
     public void NormalizeUrl_DataScheme_ReturnsNull() =>
         Assert.Null(TypeCodeHelper.NormalizeUrl("data:text/html,<b>hi</b>"));
 
+    // TaxPeriodDatetime
+    [Theory]
+    [InlineData("202312", "2023-12")]
+    [InlineData("202001", "2020-01")]
+    [InlineData("199906", "1999-06")]
+    public void TaxPeriodDatetime_ValidInput_ReturnsIsoYearMonth(string tp, string expected) =>
+        Assert.Equal(expected, TypeCodeHelper.TaxPeriodDatetime(tp));
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("2023")]
+    [InlineData("20231")]
+    [InlineData("202300")]
+    [InlineData("202313")]
+    public void TaxPeriodDatetime_InvalidInput_ReturnsNull(string? tp) =>
+        Assert.Null(TypeCodeHelper.TaxPeriodDatetime(tp));
+
     // StateName
     [Theory]
     [InlineData("IL", "Illinois")]
