@@ -73,6 +73,20 @@ public static class TypeCodeHelper
             ["VI"]="U.S. Virgin Islands",["AS"]="American Samoa",["MP"]="Northern Mariana Islands",
         };
 
+    public static string UrlDisplayText(string? url, int maxLength = 50)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return "";
+        var trimmed = url.Trim();
+        if (Uri.TryCreate(trimmed, UriKind.Absolute, out var uri))
+        {
+            var host = uri.Host;
+            if (host.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
+                host = host[4..];
+            return host;
+        }
+        return trimmed.Length > maxLength ? trimmed[..maxLength] + "…" : trimmed;
+    }
+
     public static string FormatLocation(string? city, string? state) =>
         string.Join(", ", new[] { city, state }
             .Where(s => !string.IsNullOrWhiteSpace(s)));

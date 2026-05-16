@@ -972,3 +972,26 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 ### Impact
 - Null city in org or officer address no longer renders `, IL 60601` (comma artifact)
 - "US" / "UNITED STATES" country lines removed from org and officer address blocks
+
+---
+
+## Iteration 42 — `UrlDisplayText` Helper, Cleaner Website Buttons (2026-05-16)
+
+### Changes
+
+**`TypeCodeHelper.UrlDisplayText()`** (`Helpers/TypeCodeHelper.cs`)
+- New helper: for absolute URLs, extracts the host and strips leading "www." prefix
+- Fallback for relative/bare URLs: truncates to `maxLength` (default 50) with "…"
+- Returns "" for null/whitespace
+
+**Details and Search pages use UrlDisplayText** (`Pages/Details.cshtml`, `Pages/Search.cshtml`)
+- Details: `Website (http://www.verylongurl.org/path/...)` → `Website (verylongurl.org)`
+- Search: raw URL in link text → hostname only
+
+**Tests** (`NfpDirect.Tests/TypeCodeHelperTests.cs`)
+- 6 new tests: https/http with www, without www, bare domain (short), bare domain (long), null
+- Test suite: 103 → 109 passing tests
+
+### Impact
+- Website buttons no longer overflow with long raw URLs — show hostname (30 chars max) instead of full URL (potentially 200+ chars)
+- Cleaner, consistent display: all website buttons show a short domain name
