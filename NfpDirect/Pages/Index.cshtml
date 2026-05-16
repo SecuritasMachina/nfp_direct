@@ -91,7 +91,7 @@
                 <div class="mt-1">
                     @if (!string.IsNullOrWhiteSpace(pc.DBA1))
                     {
-                        <span class="text-muted small">DBA: @pc.DBA1</span>
+                        <span class="text-muted small">DBA: @TypeCodeHelper.TitleCase(pc.DBA1)</span>
                     }
                     <address class="mb-1 small">
                         @if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine1)) { @pc.OrgAddressLine1<br /> }
