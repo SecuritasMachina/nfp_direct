@@ -46,6 +46,12 @@ else
             @if (Model.Postcard != null)
             {
                 var pc = Model.Postcard;
+                @if (TypeCodeHelper.YesNo(pc.Terminated) == "Yes")
+                {
+                    <div class="mb-2">
+                        <span class="badge bg-danger">Terminated</span>
+                    </div>
+                }
                 @if (pc.Year.HasValue) { <h6 class="text-muted">Year: @pc.Year</h6> }
 
                 <address>
