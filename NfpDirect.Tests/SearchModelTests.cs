@@ -203,6 +203,22 @@ public class SearchModelTests
         Assert.Equal(1, model.TotalResults);
         Assert.Equal("111111111", model.Results[0].Pub78.EIN);
     }
+
+    [Fact]
+    public async Task EinSearch_WithStateFilter_BackUrlIncludesState()
+    {
+        using var db = CreateDb(nameof(EinSearch_WithStateFilter_BackUrlIncludesState));
+        db.Pub78.Add(new Pub78 { EIN = "123456789", CompanyName = "SOME ORG", State = "IL", Country = "US" });
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        var result = await model.OnGetAsync(q: "123456789", state: "IL", page: null);
+
+        var redirect = Assert.IsType<RedirectToPageResult>(result);
+        var backUrl = redirect.RouteValues!["back"]?.ToString();
+        Assert.NotNull(backUrl);
+        Assert.Contains("state=IL", backUrl);
+    }
 }
 
 // Minimal ITempDataProvider for unit tests — no session/cookie needed

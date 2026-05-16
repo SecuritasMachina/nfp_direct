@@ -84,7 +84,8 @@ public class SearchModel : PageModel
         if (IsEinLike(Query) && TotalResults == 1)
         {
             var match = await queryable.FirstAsync();
-            var backUrl = "/Search?q=" + Uri.EscapeDataString(Query);
+            var backUrl = "/Search?q=" + Uri.EscapeDataString(Query)
+                + (StateFilter.Length > 0 ? "&state=" + Uri.EscapeDataString(StateFilter) : "");
             return RedirectToPage("/Details", new { id = match.EIN, back = backUrl });
         }
 
