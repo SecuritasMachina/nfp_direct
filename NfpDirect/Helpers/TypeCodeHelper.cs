@@ -73,6 +73,11 @@ public static class TypeCodeHelper
             ["VI"]="U.S. Virgin Islands",["AS"]="American Samoa",["MP"]="Northern Mariana Islands",
         };
 
+    public static string StateName(string? code) =>
+        !string.IsNullOrWhiteSpace(code) && UsStates.TryGetValue(code.Trim(), out var name)
+            ? name
+            : code?.Trim() ?? "";
+
     public static string UrlDisplayText(string? url, int maxLength = 50)
     {
         if (string.IsNullOrWhiteSpace(url)) return "";
