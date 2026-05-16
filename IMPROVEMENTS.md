@@ -782,3 +782,23 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 ### Impact
 - Screen readers can now announce the Search page form correctly — previously the submit button had no accessible name
 - EIN display is consistent across all contexts on the Details page (formatted XX-XXXXXXX everywhere)
+
+---
+
+## Iteration 33 — Error Page Consistency, Pagination Nav Landmark (2026-05-16)
+
+### Changes
+
+**Error page (500) UI consistency** (`Pages/Error.cshtml`)
+- Replaced `alert alert-danger` block with the same display-4 heading + buttons pattern used by the 404 and 429 pages
+- "500" heading in `text-danger`, lead paragraph, Browse and Search buttons
+- Request ID preserved for development environments (shows below buttons)
+
+**Pagination `<nav>` landmark** (`Index.cshtml`, `ByPostcard.cshtml`, `Search.cshtml`)
+- Bottom pagination `<div>` elements converted to `<nav aria-label="Page navigation">`
+- Screen reader users can now jump directly to the pagination region via landmark navigation
+- WCAG 2.4.1 (bypass blocks): pagination is now a navigable landmark, not an anonymous div
+
+### Impact
+- Error page: consistent with the 404/429 pages — branded, navigable, not a bare alert box
+- Pagination: screen reader users can skip directly to next/previous controls without traversing org cards
