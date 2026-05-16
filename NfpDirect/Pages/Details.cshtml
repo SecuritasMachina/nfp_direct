@@ -8,6 +8,8 @@
     ViewData["Description"] = Model.Pub78 != null
         ? $"Non-profit organization details for {name} (EIN {TypeCodeHelper.FormatEin(Model.Id)})."
         : $"EIN {TypeCodeHelper.FormatEin(Model.Id)} not found.";
+    if (Model.Pub78 != null)
+        ViewData["CanonicalUrl"] = $"{ViewContext.HttpContext.Request.Scheme}://{ViewContext.HttpContext.Request.Host}/Details?id={Uri.EscapeDataString(Model.Id)}";
 }
 
 
