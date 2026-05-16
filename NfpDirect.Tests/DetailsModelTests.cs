@@ -53,15 +53,15 @@ public class DetailsModelTests
     }
 
     [Fact]
-    public async Task EmptyId_ReturnsPageWithoutQuery()
+    public async Task EmptyId_RedirectsToIndex()
     {
-        using var db = CreateDb(nameof(EmptyId_ReturnsPageWithoutQuery));
+        using var db = CreateDb(nameof(EmptyId_RedirectsToIndex));
         var (model, _) = CreateModel(db);
 
         var result = await model.OnGetAsync(id: null, back: null);
 
-        Assert.IsType<PageResult>(result);
-        Assert.Null(model.Pub78);
+        var redirect = Assert.IsType<RedirectToPageResult>(result);
+        Assert.Equal("/Index", redirect.PageName);
     }
 
     [Fact]

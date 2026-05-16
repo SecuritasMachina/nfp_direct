@@ -26,7 +26,7 @@ public class DetailsModel : PageModel
         if (!string.IsNullOrWhiteSpace(back) && back.StartsWith('/') && !back.StartsWith("//"))
             BackUrl = back;
         if (string.IsNullOrWhiteSpace(Id))
-            return Page();
+            return RedirectToPage("/Index");
 
         Pub78 = await _db.Pub78.AsNoTracking().FirstOrDefaultAsync(p => p.EIN == Id);
         if (Pub78 == null)

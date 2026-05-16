@@ -998,6 +998,22 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 80 — Redirect /Details with No id to Home (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Details.cshtml.cs`**
+- When `id` is null or whitespace, returns `RedirectToPage("/Index")` instead of a 200 Page with a confusing warning
+- **Before**: `/Details` (no query) returned HTTP 200 with "Organization with EIN — not found." warning, confusing users and search engines alike
+- **After**: redirects to the Browse page, providing a useful landing point
+
+**`NfpDirect.Tests/DetailsModelTests.cs`**
+- Updated `EmptyId_ReturnsPageWithoutQuery` → `EmptyId_RedirectsToIndex` to assert the redirect behavior
+
+### Impact
+- Eliminates a 200-OK response for a semantically empty/invalid request
+- Better UX: users who land on /Details with no id are sent to a useful page
+
 ## Iteration 79 — NormalizeUrl Prefers HTTPS for Bare Domain URLs (2026-05-16)
 
 ### Changes
