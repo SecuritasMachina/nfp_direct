@@ -63,7 +63,7 @@ builder.Services.AddOutputCache(opts =>
         .Tag("browse"));
     opts.AddPolicy("DetailsPage", p => p
         .Expire(TimeSpan.FromSeconds(30))
-        .SetVaryByQuery("id")
+        .SetVaryByQuery("id", "back")
         .Tag("details"));
 });
 
