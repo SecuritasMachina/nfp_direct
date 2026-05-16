@@ -998,6 +998,36 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 88 — Fix Heading Hierarchy Across All Pages (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**
+- `<h4 class="mb-0">` → `<h1 class="h4 mb-0">` (page main heading)
+- `<h5 class="card-title mb-1">` → `<h2 class="h5 card-title mb-1">` (org name in result cards)
+
+**`NfpDirect/Pages/ByPostcard.cshtml`**
+- `<h4 class="mb-0">` → `<h1 class="h4 mb-0">` (page main heading)
+- `<h5 class="card-title mb-1">` → `<h2 class="h5 card-title mb-1">` (org name in result cards)
+
+**`NfpDirect/Pages/Search.cshtml`**
+- `<h4 class="mb-3">` → `<h1 class="h4 mb-3">` (page main heading)
+- `<h5 class="card-title mb-1">` → `<h2 class="h5 card-title mb-1">` (org name in result cards)
+
+**`NfpDirect/Pages/Details.cshtml`**
+- `<h4 class="card-title">` → `<h1 class="h4 card-title">` (org name — page main heading)
+- `<h6 class="text-muted">Year:` → `<h2 class="h6 text-muted">Year:`
+- `<h6>Doing Business As:</h6>` → `<h2 class="h6">Doing Business As:</h2>`
+- `<h6>Officer Information:</h6>` → `<h2 class="h6">Officer Information:</h2>`
+
+Error, NotFound, and TooManyRequests pages already had correct `<h1>` headings.
+
+### Impact
+- Every content page now has a proper `<h1>` as its primary heading — required for WCAG 2.4.6 and standard SEO practice
+- Visual appearance is unchanged (Bootstrap `h4`/`h5`/`h6` classes applied)
+- Correct hierarchy (`h1` → `h2`) signals content structure to search engines and screen readers
+- 155 tests passing
+
 ## Iteration 87 — JSON-LD Organization Schema on Details Page (2026-05-16)
 
 ### Changes

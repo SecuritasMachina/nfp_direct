@@ -10,7 +10,7 @@
             : "Search";
 }
 
-<h4 class="mb-3">Search Non-Profit Organizations</h4>
+<h1 class="h4 mb-3">Search Non-Profit Organizations</h1>
 
 <form method="get" action="/Search" class="mb-4" role="search">
     <div class="row g-2">
@@ -87,13 +87,13 @@
         {
             <div class="card mb-2">
                 <div class="card-body py-2">
-                    <h5 class="card-title mb-1">
+                    <h2 class="h5 card-title mb-1">
                         <a href="/Details?id=@Uri.EscapeDataString(r.Pub78.EIN)&back=@searchBackUrl"
                            class="text-decoration-none">
                             @TypeCodeHelper.TitleCase(r.Pub78.CompanyName)
                         </a>
                         <small class="text-muted ms-2">EIN: @TypeCodeHelper.FormatEin(r.Pub78.EIN)</small>
-                    </h5>
+                    </h2>
                     <div class="text-muted small">
                         @TypeCodeHelper.FormatLocation(r.Pub78.City, r.Pub78.State)
                         @if (TypeCodeHelper.ShouldShowCountry(r.Pub78.Country)) { <text>· @r.Pub78.Country</text> }
