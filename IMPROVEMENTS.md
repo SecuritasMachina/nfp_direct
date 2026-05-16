@@ -998,6 +998,22 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 102 — Sitemap.xml Endpoint (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Program.cs`**
+- Added `GET /sitemap.xml` minimal endpoint: outputs valid XML Sitemap 0.9 with the home page (priority 1.0/daily), the Search page (0.8/weekly), and all 56 US state/territory browse pages (0.7/weekly)
+- Response cached 24 hours via output cache
+- Origin derived from request `Host` header to work across environments
+
+### Impact
+- `<link rel="sitemap">` in `_Layout.cshtml` was already in place (iteration 99) but pointed to a 404 — this completes the contract so crawlers can discover all state browse pages
+- Potentially accelerates indexing of ~56 high-value state-filtered listing pages
+- 162 tests passing
+
+---
+
 ## Iteration 101 — Type Code Filter on Browse Page (2026-05-16)
 
 ### Changes
