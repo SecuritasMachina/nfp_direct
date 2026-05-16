@@ -1,9 +1,11 @@
 @page
 @model SearchModel
 @{
-    ViewData["Title"] = Model.Query.Length > 0
-        ? $"Search: {Model.Query}"
-        : "Search";
+    ViewData["Title"] = Model.Query.Length > 0 && Model.TotalResults > 0
+        ? $"Search: {Model.Query} ({Model.TotalResults} result{(Model.TotalResults == 1 ? "" : "s")})"
+        : Model.Query.Length > 0
+            ? $"Search: {Model.Query}"
+            : "Search";
 }
 
 <h4 class="mb-3">Search Non-Profit Organizations</h4>

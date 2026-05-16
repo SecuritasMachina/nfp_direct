@@ -890,3 +890,23 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 ### Impact
 - The FULLTEXT injection prevention code was previously untested; now has 11 tests covering all escape scenarios
 - Extracing `BuildFullTextQuery` documents the contract: any non-alphanumeric-or-space character is stripped before the query reaches MariaDB's FULLTEXT parser
+
+---
+
+## Iteration 38 — IsEinLike Tests, Search Tab Title Improvement (2026-05-16)
+
+### Changes
+
+**`IsEinLike` exposed and tested** (`Pages/Search.cshtml.cs`, `NfpDirect.Tests/EinLikeTests.cs`)
+- Changed `IsEinLike` from `private` to `internal static` (mirrors `BuildFullTextQuery` pattern from iteration 37)
+- 10 new tests: 9-digit EIN, hyphenated `12-3456789`, 8-digit (too short), 10-digit (too long), contains letters, empty string, plain text, multi-hyphen with 9 digits total, all-hyphens, 8-digits-with-hyphen
+- Test suite: 82 → 92 passing tests
+
+**Search tab title shows result count** (`Pages/Search.cshtml`)
+- Was: "Search: habitat" in browser tab regardless of result count
+- Now: "Search: habitat (42 results)" when results exist; "Search: habitat" when zero results
+- Helps users distinguish open search tabs and read result counts at a glance from history/bookmarks
+
+### Impact
+- `IsEinLike` is the gate for the EIN auto-redirect path; now has full edge case coverage
+- Tab title: users with multiple search tabs can now see result counts without switching

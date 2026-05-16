@@ -106,7 +106,7 @@ public class SearchModel : PageModel
     }
 
     // Heuristic: treat all-digit strings (with optional hyphens) as EIN lookups
-    private static bool IsEinLike(string q) =>
+    internal static bool IsEinLike(string q) =>
         q.Replace("-", "").All(char.IsDigit) && q.Replace("-", "").Length == 9;
 
     // Builds the MariaDB FULLTEXT boolean-mode query string from a raw user query.
