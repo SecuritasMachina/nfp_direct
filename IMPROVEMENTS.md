@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 72 — Dynamic Meta Description for Browse and ByPostcard (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**, **`NfpDirect/Pages/ByPostcard.cshtml`**
+- When a state filter is active, `<meta name="description">` now includes the full state name
+- Example: `/?state=IL` → "Browse IRS-registered non-profit organizations in Illinois. Filter by state, search by name or 9-digit EIN."
+- **Before**: every Browse/ByPostcard page used the same generic description regardless of state filter
+
+### Impact
+- State-filtered pages show more relevant, specific descriptions in search engine results
+- Better click-through rate for state-specific queries (e.g., "Illinois non-profits")
+- State name is resolved via `TypeCodeHelper.UsStates` so the description uses "Illinois" not "IL"
+
 ## Iteration 71 — Search Nav Link with Active State (2026-05-16)
 
 ### Changes

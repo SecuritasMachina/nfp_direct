@@ -4,7 +4,12 @@
     ViewData["Title"] = Model.StateFilter.Length > 0
         ? $"Browse Non-Profits in {Model.StateFilter} — Page {Model.PageNumber + 1}"
         : $"Browse Non-Profits — Page {Model.PageNumber + 1}";
-    ViewData["Description"] = "Browse IRS-registered non-profit organizations by name. Search by organization name, 9-digit EIN, or filter by state.";
+    var indexStateName = Model.StateFilter.Length > 0
+        ? TypeCodeHelper.UsStates.GetValueOrDefault(Model.StateFilter, Model.StateFilter)
+        : null;
+    ViewData["Description"] = indexStateName != null
+        ? $"Browse IRS-registered non-profit organizations in {indexStateName}. Filter by state, search by name or 9-digit EIN."
+        : "Browse IRS-registered non-profit organizations by name. Search by organization name, 9-digit EIN, or filter by state.";
     var indexBackUrl = Uri.EscapeDataString("/" + (ViewContext.HttpContext.Request.QueryString.Value ?? ""));
     var stateQs = Model.StateFilter.Length > 0 ? $"&state={Uri.EscapeDataString(Model.StateFilter)}" : "";
     var req = ViewContext.HttpContext.Request;
