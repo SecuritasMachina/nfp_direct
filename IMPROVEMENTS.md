@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 99 — OpenSearch Description for Browser Search Integration (2026-05-16)
+
+### Changes
+
+**`NfpDirect/wwwroot/opensearch.xml`** (new file)
+- OpenSearch 1.1 description: ShortName, Description, Url template for `/Search?q={searchTerms}`, SVG icon reference
+
+**`NfpDirect/Pages/Shared/_Layout.cshtml`**
+- Added `<link rel="search" type="application/opensearchdescription+xml" title="NFP Direct" href="/opensearch.xml">` to all pages
+
+### Impact
+- Browsers that detect `<link rel="search">` (Firefox, Chromium derivatives, Safari) will offer to add NFP Direct as a custom search engine — users can type "nfpdirect.ackdev.com" in the address bar and press Tab to search directly
+- 159 tests passing
+
 ## Iteration 98 — Geo Meta Tags + Title Separator Update (2026-05-16)
 
 ### Changes
