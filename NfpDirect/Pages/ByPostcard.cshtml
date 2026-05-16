@@ -7,6 +7,11 @@
     ViewData["Description"] = "Browse non-profit organizations with IRS Form 990-N (e-Postcard) filings.";
     var bypcBackUrl = Uri.EscapeDataString("/ByPostcard" + (ViewContext.HttpContext.Request.QueryString.Value ?? ""));
     var stateQs = Model.StateFilter.Length > 0 ? $"&state={Uri.EscapeDataString(Model.StateFilter)}" : "";
+    var bypcReq = ViewContext.HttpContext.Request;
+    var bypcPageQs = Model.PageNumber > 0 ? $"?page={Model.PageNumber}{stateQs}"
+        : Model.StateFilter.Length > 0 ? $"?{stateQs[1..]}"
+        : "";
+    ViewData["CanonicalUrl"] = $"{bypcReq.Scheme}://{bypcReq.Host}/ByPostcard{bypcPageQs}";
 }
 
 @section Head {

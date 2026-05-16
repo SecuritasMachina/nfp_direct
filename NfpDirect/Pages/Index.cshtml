@@ -7,6 +7,11 @@
     ViewData["Description"] = "Browse IRS-registered non-profit organizations by name. Search by organization name, 9-digit EIN, or filter by state.";
     var indexBackUrl = Uri.EscapeDataString("/" + (ViewContext.HttpContext.Request.QueryString.Value ?? ""));
     var stateQs = Model.StateFilter.Length > 0 ? $"&state={Uri.EscapeDataString(Model.StateFilter)}" : "";
+    var req = ViewContext.HttpContext.Request;
+    var indexPageQs = Model.PageNumber > 0 ? $"?page={Model.PageNumber}{stateQs}"
+        : Model.StateFilter.Length > 0 ? $"?{stateQs[1..]}"
+        : "";
+    ViewData["CanonicalUrl"] = $"{req.Scheme}://{req.Host}/{indexPageQs}";
 }
 
 @section Head {
