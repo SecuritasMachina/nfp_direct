@@ -52,12 +52,7 @@ public class SearchModel : PageModel
 
             if (useFullText)
             {
-                var sanitized = new string(Query
-                    .Where(c => char.IsLetterOrDigit(c) || c == ' ').ToArray()).Trim();
-                var ftQuery = string.Join(" ", sanitized
-                    .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(w => $"+{w}*"));
-
+                var ftQuery = BuildFullTextQuery(Query);
                 if (ftQuery.Length > 0)
                     queryable = _db.Pub78
                         .FromSqlRaw(
@@ -113,6 +108,18 @@ public class SearchModel : PageModel
     // Heuristic: treat all-digit strings (with optional hyphens) as EIN lookups
     private static bool IsEinLike(string q) =>
         q.Replace("-", "").All(char.IsDigit) && q.Replace("-", "").Length == 9;
+
+    // Builds the MariaDB FULLTEXT boolean-mode query string from a raw user query.
+    // Strips all non-alphanumeric/space characters to prevent FULLTEXT operator injection.
+    // Returns empty string if nothing remains after sanitization (caller falls back to LIKE).
+    internal static string BuildFullTextQuery(string query)
+    {
+        var sanitized = new string(query
+            .Where(c => char.IsLetterOrDigit(c) || c == ' ').ToArray()).Trim();
+        return string.Join(" ", sanitized
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Select(w => $"+{w}*"));
+    }
 }
 
 public record SearchResult

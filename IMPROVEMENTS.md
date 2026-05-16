@@ -868,3 +868,25 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 - `ftp://` URLs: were rendered as `ftp://` (broken link); now show Google Search fallback
 - `javascript:` / `data:` URLs: were broken `http://javascript:...`; now show Google Search fallback
 - Code duplication: 4 copies of 3-line URL check → 1 centralized helper
+
+---
+
+## Iteration 37 — FULLTEXT Query Builder Tests, InternalsVisibleTo (2026-05-16)
+
+### Changes
+
+**`SearchModel.BuildFullTextQuery()` extracted** (`Pages/Search.cshtml.cs`)
+- Moved FULLTEXT boolean-mode query construction into an `internal static` method
+- Previously: inline in `OnGetAsync`, untestable
+- Method strips all non-alphanumeric/non-space characters to prevent FULLTEXT operator injection (`+`, `-`, `*`, `"`, etc.), then builds `+word*` prefix-wildcard expressions per word
+
+**`InternalsVisibleTo`** (`NfpDirect/AssemblyInfo.cs`)
+- Added `[assembly: InternalsVisibleTo("NfpDirect.Tests")]` to expose `internal` members to the test project
+
+**FULLTEXT sanitization tests** (`NfpDirect.Tests/FullTextQueryTests.cs`)
+- 11 new tests: single word, multi-word, special chars stripped, FULLTEXT operators stripped (+, -, *, quotes), all-special returns empty, whitespace normalized, numeric, mixed case
+- Test suite: 71 → 82 passing tests
+
+### Impact
+- The FULLTEXT injection prevention code was previously untested; now has 11 tests covering all escape scenarios
+- Extracing `BuildFullTextQuery` documents the contract: any non-alphanumeric-or-space character is stripped before the query reaches MariaDB's FULLTEXT parser
