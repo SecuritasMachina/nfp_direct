@@ -35,7 +35,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-2">
     <h1 class="h4 mb-0">
-        Browse by Postcard@(bypcStateName != null ? $" in {bypcStateName}" : "") — Page @(Model.PageNumber + 1)
+        Browse by Postcard@(bypcStateName != null ? $" in {bypcStateName}" : "") — Page @(Model.PageNumber + 1) of @Model.TotalPages.ToString("N0")
         <small class="text-muted fw-normal ms-2 fs-6">@Model.TotalCount.ToString("N0") total</small>
     </h1>
     <div>

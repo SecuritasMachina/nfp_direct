@@ -998,6 +998,22 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 95 — TotalPages in Browse/ByPostcard + Twitter Card Meta (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml.cs`** and **`NfpDirect/Pages/ByPostcard.cshtml.cs`**
+- Added `TotalPages` property computed as `(TotalCount + PageSize - 1) / PageSize`
+- Heading now reads "Page X of Y" instead of "Page X"
+
+**`NfpDirect/Pages/Shared/_Layout.cshtml`**
+- Added `<meta name="twitter:card" content="summary">` to enable Twitter/X card previews when pages are shared on social media (picks up og:title, og:description from existing OG meta)
+
+### Impact
+- Users browsing know how many pages exist — especially useful for state-filtered views where the count is manageable (e.g., "Page 1 of 297" for Illinois)
+- Twitter/X will now show structured cards with title and description when a page is shared
+- 159 tests passing
+
 ## Iteration 94 — ByPostcard Page: Show Total Postcard Count (2026-05-16)
 
 ### Changes

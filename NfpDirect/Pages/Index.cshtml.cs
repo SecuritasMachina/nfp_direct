@@ -25,6 +25,7 @@ public class IndexModel : PageModel
     public bool HasNextPage { get; private set; }
     public string StateFilter { get; private set; } = "";
     public long TotalCount { get; private set; }
+    public long TotalPages { get; private set; }
     public List<IndexEntry> Entries { get; private set; } = [];
 
     public async Task<IActionResult> OnGetAsync([FromQuery] string? page, [FromQuery] string? state)
@@ -41,6 +42,7 @@ public class IndexModel : PageModel
             queryable = queryable.Where(p => p.State == StateFilter);
 
         TotalCount = await queryable.LongCountAsync();
+        TotalPages = (TotalCount + PageSize - 1) / PageSize;
 
         var pub78Page = await queryable
             .OrderBy(p => p.CompanyName)
