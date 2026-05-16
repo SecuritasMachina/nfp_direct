@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 45 — Index Page: Apply FormatLocation/ShouldShowCountry to Postcard Block (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**
+- Postcard address block city/state line: `@pc.OrgCity, @pc.OrgState` → `@TypeCodeHelper.FormatLocation(pc.OrgCity, pc.OrgState)`
+- Added `@if (TypeCodeHelper.ShouldShowCountry(pc.OrgCountry)) { @pc.OrgCountry }` to suppress "US" noise
+- **Bug**: When `OrgCity` or `OrgState` was null, the address rendered `, IL 60601` or `Chicago,  60601`. All other address blocks (ByPostcard, Details, Search) had been fixed in prior iterations but this block was missed.
+
+### Impact
+- Index page postcard addresses now render cleanly when city or state data is missing
+- "US" no longer shown as country for domestic organizations on the Browse page
+
 ## Iteration 44 — EIN Redirect Preserves State Filter in Back URL (2026-05-16)
 
 ### Changes
