@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 48 — `noindex` Meta Tag on Error Pages (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Shared/_Layout.cshtml`**
+- Added conditional `<meta name="robots" content="@ViewData["Robots"]">` in `<head>` — only emitted when `ViewData["Robots"]` is set
+
+**`NfpDirect/Pages/NotFound.cshtml`**, **`Error.cshtml`**, **`TooManyRequests.cshtml`**
+- Set `ViewData["Robots"] = "noindex"` in each page's `@{}` block
+
+### Impact
+- Error and status pages can no longer be indexed by search engines, even if a crawler fetches them
+- HTTP status codes (404, 429, 500) already signal non-indexable content, but the meta tag provides belt-and-suspenders protection
+
 ## Iteration 47 — `role="search"` Landmark on Search Forms (2026-05-16)
 
 ### Changes
