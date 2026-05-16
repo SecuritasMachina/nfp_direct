@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 71 — Search Nav Link with Active State (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Shared/_Layout.cshtml`**
+- Added "Search" nav item to the navbar navigation list with `active` class and `aria-current="page"` when on `/Search`
+- **Before**: no nav item highlighted when on the Search page; Search was reachable only via the inline navbar search form with no visible page indicator
+- **After**: consistent active-state feedback for all three main pages (Browse, By Postcard, Search)
+
+### Impact
+- Users and screen readers can now tell which nav section they're in when on the Search page
+- The Search page is now discoverable via a direct nav link (not just the search form)
+
 ## Iteration 70 — Precise Canonical URLs for Browse and ByPostcard Pages (2026-05-16)
 
 ### Changes
