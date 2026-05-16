@@ -998,6 +998,24 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 98 — Geo Meta Tags + Title Separator Update (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Shared/_Layout.cshtml`**
+- Changed `<title>` separator from ` - ` to ` | ` (same in `og:title`) — ` | ` is the prevailing web convention, visually cleaner
+- Added conditional `<meta name="geo.region">` and `<meta name="geo.placename">` rendering when `ViewData["GeoRegion"]` / `ViewData["GeoPlacename"]` are set
+
+**`NfpDirect/Pages/Index.cshtml`**
+- When `indexStateName != null` (state-filtered browse), sets:
+  - `ViewData["GeoRegion"] = "US-{StateFilter}"` (e.g., `"US-IL"`)
+  - `ViewData["GeoPlacename"] = indexStateName` (e.g., `"Illinois"`)
+
+### Impact
+- Geo meta tags signal to Bing and other geographic search engines that state-filtered pages are specifically relevant to that state — supports local search ranking
+- Updated title separator is visually cleaner and consistent with industry standard
+- 159 tests passing
+
 ## Iteration 97 — Details: Richer Meta Description with Type/Location (2026-05-16)
 
 ### Changes
