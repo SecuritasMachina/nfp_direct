@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 53 — Details Page: Clean Google Query Construction (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Details.cshtml`**
+- **Google News (org)**: `(pub.CompanyName ?? name) + " " + (pub.City ?? "")` → `string.Join(" ", new[]{pub.CompanyName ?? name, pub.City}.Where(!IsNullOrWhiteSpace))` — removes trailing space when City is null
+- **Google Search/News (officer)**: extracted `officerQuery` variable using same pattern; previously `(pc.OfficerName ?? "") + " " + pc.OfficerAddressCity` could produce leading/trailing spaces
+- Also eliminates the duplicated officer query expression (was computed twice: once for Google Search, once for Google News)
+
+### Impact
+- Search queries for orgs/officers without city data are now clean (no trailing space URL-encoded as `+`)
+- DRY: officer query computed once, used twice
+
 ## Iteration 52 — Server-Side State Filter Validation (2026-05-16)
 
 ### Changes
