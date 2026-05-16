@@ -90,14 +90,14 @@
                     @if (!string.IsNullOrWhiteSpace(pc.WebsiteURL) &&
                          !pc.WebsiteURL.Equals("n/a", StringComparison.OrdinalIgnoreCase))
                     {
-                        <a class="btn btn-sm btn-outline-primary me-1" target="_blank"
+                        <a class="btn btn-sm btn-outline-primary me-1" target="_blank" rel="noopener noreferrer"
                            href="@(pc.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? pc.WebsiteURL : "http://" + pc.WebsiteURL)">
                             <i class="fa fa-globe" aria-hidden="true"></i> Website
                         </a>
                     }
                     else
                     {
-                        <a class="btn btn-sm btn-outline-secondary me-1" target="_blank"
+                        <a class="btn btn-sm btn-outline-secondary me-1" target="_blank" rel="noopener noreferrer"
                            href="https://www.google.com/search?q=@Uri.EscapeDataString(pc.CompanyName ?? "")">
                             <i class="fab fa-google" aria-hidden="true"></i> Search Google
                         </a>

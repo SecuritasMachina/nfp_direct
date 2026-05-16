@@ -100,7 +100,7 @@
                          && !r.Postcard.WebsiteURL.Equals("n/a", StringComparison.OrdinalIgnoreCase))
                     {
                         <div class="mt-1">
-                            <a class="btn btn-sm btn-outline-primary" target="_blank"
+                            <a class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener noreferrer"
                                href="@(r.Postcard.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? r.Postcard.WebsiteURL : "http://" + r.Postcard.WebsiteURL)">
                                 <i class="fa fa-globe" aria-hidden="true"></i> @r.Postcard.WebsiteURL
                             </a>
