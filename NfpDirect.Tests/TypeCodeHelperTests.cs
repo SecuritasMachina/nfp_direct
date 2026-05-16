@@ -158,6 +158,32 @@ public class TypeCodeHelperTests
         Assert.False(TypeCodeHelper.ShouldShowCountry(""));
 
     // NormalizeUrl
+    // UrlDisplayText
+    [Fact]
+    public void UrlDisplayText_HttpsUrl_ReturnsHostWithoutWww() =>
+        Assert.Equal("example.org", TypeCodeHelper.UrlDisplayText("https://www.example.org/path"));
+
+    [Fact]
+    public void UrlDisplayText_HttpUrl_ReturnsHostWithoutWww() =>
+        Assert.Equal("example.org", TypeCodeHelper.UrlDisplayText("http://www.example.org"));
+
+    [Fact]
+    public void UrlDisplayText_UrlWithoutWww_ReturnsHost() =>
+        Assert.Equal("nonprofit.org", TypeCodeHelper.UrlDisplayText("https://nonprofit.org/about"));
+
+    [Fact]
+    public void UrlDisplayText_BareUrl_TruncatesIfLong() =>
+        Assert.EndsWith("…", TypeCodeHelper.UrlDisplayText(new string('a', 60)));
+
+    [Fact]
+    public void UrlDisplayText_BareUrl_ShortNoop() =>
+        Assert.Equal("example.com", TypeCodeHelper.UrlDisplayText("example.com"));
+
+    [Fact]
+    public void UrlDisplayText_Null_ReturnsEmpty() =>
+        Assert.Equal("", TypeCodeHelper.UrlDisplayText(null));
+
+    // NormalizeUrl
     [Fact]
     public void NormalizeUrl_Null_ReturnsNull() =>
         Assert.Null(TypeCodeHelper.NormalizeUrl(null));
