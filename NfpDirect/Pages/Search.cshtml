@@ -98,13 +98,13 @@
                                   title="IRC 501(c)(@r.Pub78.TypeCode)">@TypeCodeHelper.Label(r.Pub78.TypeCode)</span>
                         }
                     </div>
-                    @if (r.Postcard != null && !string.IsNullOrWhiteSpace(r.Postcard.WebsiteURL)
-                         && !r.Postcard.WebsiteURL.Equals("n/a", StringComparison.OrdinalIgnoreCase))
+                    @{var searchSiteUrl = TypeCodeHelper.NormalizeUrl(r.Postcard?.WebsiteURL);}
+                    @if (searchSiteUrl != null)
                     {
                         <div class="mt-1">
                             <a class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener noreferrer"
-                               href="@(r.Postcard.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? r.Postcard.WebsiteURL : "http://" + r.Postcard.WebsiteURL)">
-                                <i class="fa fa-globe" aria-hidden="true"></i> @r.Postcard.WebsiteURL
+                               href="@searchSiteUrl">
+                                <i class="fa fa-globe" aria-hidden="true"></i> @r.Postcard!.WebsiteURL
                             </a>
                         </div>
                     }

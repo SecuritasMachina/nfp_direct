@@ -95,10 +95,10 @@ else
                 </p>
 
                 <div class="mt-2">
-                    @if (!string.IsNullOrWhiteSpace(pc.WebsiteURL) &&
-                         !pc.WebsiteURL.Equals("n/a", StringComparison.OrdinalIgnoreCase))
+                    @{var detailSiteUrl = TypeCodeHelper.NormalizeUrl(pc.WebsiteURL);}
+                    @if (detailSiteUrl != null)
                     {
-                        <a class="btn btn-outline-primary me-2" target="_blank" rel="noopener noreferrer" href="@(pc.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? pc.WebsiteURL : "http://" + pc.WebsiteURL)">
+                        <a class="btn btn-outline-primary me-2" target="_blank" rel="noopener noreferrer" href="@detailSiteUrl">
                             <i class="fa fa-globe" aria-hidden="true"></i> Website (@pc.WebsiteURL)
                         </a>
                     }

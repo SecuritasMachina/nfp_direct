@@ -87,11 +87,11 @@
                         @pc.OrgCity, @pc.OrgState @pc.OrgPostalCode<br />
                         @pc.OrgCountry
                     </address>
-                    @if (!string.IsNullOrWhiteSpace(pc.WebsiteURL) &&
-                         !pc.WebsiteURL.Equals("n/a", StringComparison.OrdinalIgnoreCase))
+                    @{var siteUrl = TypeCodeHelper.NormalizeUrl(pc.WebsiteURL);}
+                    @if (siteUrl != null)
                     {
                         <a class="btn btn-sm btn-outline-primary me-1" target="_blank" rel="noopener noreferrer"
-                           href="@(pc.WebsiteURL!.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? pc.WebsiteURL : "http://" + pc.WebsiteURL)">
+                           href="@siteUrl">
                             <i class="fa fa-globe" aria-hidden="true"></i> Website
                         </a>
                     }

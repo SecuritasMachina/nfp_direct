@@ -73,6 +73,23 @@ public static class TypeCodeHelper
             ["VI"]="U.S. Virgin Islands",["AS"]="American Samoa",["MP"]="Northern Mariana Islands",
         };
 
+    public static string? NormalizeUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url) || url.Equals("n/a", StringComparison.OrdinalIgnoreCase))
+            return null;
+        var trimmed = url.Trim();
+        if (trimmed.StartsWith("https://", StringComparison.OrdinalIgnoreCase) ||
+            trimmed.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+            return trimmed;
+        // Reject any URL that appears to have a scheme (contains "://", or ":" before any "/")
+        // This blocks ftp://, javascript:, data:, etc.
+        var colonIdx = trimmed.IndexOf(':');
+        var slashIdx = trimmed.IndexOf('/');
+        if (colonIdx >= 0 && (slashIdx < 0 || colonIdx < slashIdx))
+            return null;
+        return "http://" + trimmed;
+    }
+
     public static string FormatMoney(string? v)
     {
         if (string.IsNullOrWhiteSpace(v)) return "—";

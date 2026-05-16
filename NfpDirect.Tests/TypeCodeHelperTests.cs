@@ -110,4 +110,45 @@ public class TypeCodeHelperTests
     [Fact]
     public void UsStates_IsCaseInsensitive() =>
         Assert.True(TypeCodeHelper.UsStates.ContainsKey("il"));
+
+    // NormalizeUrl
+    [Fact]
+    public void NormalizeUrl_Null_ReturnsNull() =>
+        Assert.Null(TypeCodeHelper.NormalizeUrl(null));
+
+    [Fact]
+    public void NormalizeUrl_Empty_ReturnsNull() =>
+        Assert.Null(TypeCodeHelper.NormalizeUrl("  "));
+
+    [Fact]
+    public void NormalizeUrl_NA_ReturnsNull() =>
+        Assert.Null(TypeCodeHelper.NormalizeUrl("n/a"));
+
+    [Fact]
+    public void NormalizeUrl_NACaseMixed_ReturnsNull() =>
+        Assert.Null(TypeCodeHelper.NormalizeUrl("N/A"));
+
+    [Fact]
+    public void NormalizeUrl_HttpsUrl_ReturnedAsIs() =>
+        Assert.Equal("https://example.org", TypeCodeHelper.NormalizeUrl("https://example.org"));
+
+    [Fact]
+    public void NormalizeUrl_HttpUrl_ReturnedAsIs() =>
+        Assert.Equal("http://example.org", TypeCodeHelper.NormalizeUrl("http://example.org"));
+
+    [Fact]
+    public void NormalizeUrl_NoScheme_PrependsHttp() =>
+        Assert.Equal("http://example.org", TypeCodeHelper.NormalizeUrl("example.org"));
+
+    [Fact]
+    public void NormalizeUrl_FtpScheme_ReturnsNull() =>
+        Assert.Null(TypeCodeHelper.NormalizeUrl("ftp://files.example.org"));
+
+    [Fact]
+    public void NormalizeUrl_JavascriptScheme_ReturnsNull() =>
+        Assert.Null(TypeCodeHelper.NormalizeUrl("javascript:alert('xss')"));
+
+    [Fact]
+    public void NormalizeUrl_DataScheme_ReturnsNull() =>
+        Assert.Null(TypeCodeHelper.NormalizeUrl("data:text/html,<b>hi</b>"));
 }
