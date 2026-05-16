@@ -118,11 +118,17 @@ public static class TypeCodeHelper
         return !UsCountryVariants.Contains(country.Trim());
     }
 
+    private static readonly HashSet<string> InvalidUrlKeywords = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "n/a", "na", "none", "no", "no website", "no web site", "www", "http", "https",
+        "not available", "not applicable", "unknown", "tbd", "coming soon", "under construction"
+    };
+
     public static string? NormalizeUrl(string? url)
     {
-        if (string.IsNullOrWhiteSpace(url) || url.Equals("n/a", StringComparison.OrdinalIgnoreCase))
-            return null;
+        if (string.IsNullOrWhiteSpace(url)) return null;
         var trimmed = url.Trim();
+        if (InvalidUrlKeywords.Contains(trimmed)) return null;
         if (trimmed.StartsWith("https://", StringComparison.OrdinalIgnoreCase) ||
             trimmed.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
             return trimmed;
@@ -132,6 +138,8 @@ public static class TypeCodeHelper
         var slashIdx = trimmed.IndexOf('/');
         if (colonIdx >= 0 && (slashIdx < 0 || colonIdx < slashIdx))
             return null;
+        // Bare domain must contain at least one dot to be a valid hostname
+        if (!trimmed.Contains('.')) return null;
         return "https://" + trimmed;
     }
 

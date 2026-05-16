@@ -998,6 +998,24 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 85 — NormalizeUrl: Reject Garbage IRS URL Values (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Helpers/TypeCodeHelper.cs`**
+- Added `InvalidUrlKeywords` HashSet: NONE, NA, N/A, NO, NO WEBSITE, WWW, HTTP, HTTPS, NOT AVAILABLE, NOT APPLICABLE, UNKNOWN, TBD, COMING SOON, UNDER CONSTRUCTION
+- Added dot-presence check: bare domain strings without a dot (e.g., "CHARITY") now return null
+- `NormalizeUrl` now returns null for any of these garbage values instead of producing broken links
+- Removed the redundant `url.Equals("n/a", ...)` early return (now covered by InvalidUrlKeywords)
+
+**`NfpDirect.Tests/TypeCodeHelperTests.cs`**
+- Added 12-case theory for garbage values + 1 test for no-dot bare word
+
+### Impact
+- IRS postcard data frequently contains placeholder text in the WebsiteURL field; these are now rejected
+- Prevents broken "NONE" or "WWW" links from appearing on org cards
+- 150 tests passing
+
 ## Iteration 84 — ShouldShowCountry: US Variant Coverage (2026-05-16)
 
 ### Changes
