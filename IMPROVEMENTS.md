@@ -998,6 +998,23 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 91 — Browse/ByPostcard: Show Full State Name in Title and Heading (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**
+- Reordered code block: `indexStateName` is now computed before `ViewData["Title"]` so it can be used in the title
+- `ViewData["Title"]` now uses `indexStateName` ("Illinois") instead of `Model.StateFilter` ("IL")
+- Page `<h1>` heading updated from "in IL" to "in Illinois"
+
+**`NfpDirect/Pages/ByPostcard.cshtml`**
+- Same reorder and update: `bypcStateName` computed first, title and heading now use the full state name
+
+### Impact
+- Page titles and headings now consistently use full state names ("Browse Non-Profits in Illinois") matching the already-correct meta descriptions (which were updated in iteration 72 to use full names)
+- Better SEO: full state names in titles are more readable and more likely to match user search queries
+- 155 tests passing
+
 ## Iteration 90 — Details Page: noindex on 404 + Rich Snippet Robots Directives (2026-05-16)
 
 ### Changes
