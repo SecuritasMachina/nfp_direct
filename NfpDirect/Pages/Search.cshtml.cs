@@ -18,6 +18,7 @@ public class SearchModel : PageModel
     private const int MaxQueryLength = 200;
     public string Query { get; private set; } = "";
     public string StateFilter { get; private set; } = "";
+    public string TypeFilter { get; private set; } = "";
     public int PageNumber { get; private set; }
     public int TotalResults { get; private set; }
     public int TotalPages { get; private set; }
@@ -26,6 +27,7 @@ public class SearchModel : PageModel
     public async Task<IActionResult> OnGetAsync(
         [FromQuery] string? q,
         [FromQuery] string? state,
+        [FromQuery] string? type,
         [FromQuery] string? page)
     {
         Query = (q ?? "").Trim();
@@ -34,9 +36,12 @@ public class SearchModel : PageModel
         StateFilter = (state ?? "").Trim().ToUpper();
         if (StateFilter.Length != 2 || !StateFilter.All(char.IsLetter))
             StateFilter = "";
+        TypeFilter = (type ?? "").Trim();
+        if (!NfpDirect.Helpers.TypeCodeHelper.Labels.ContainsKey(TypeFilter))
+            TypeFilter = "";
         ViewData["SearchQuery"] = Query;
 
-        if (Query.Length == 0 && StateFilter.Length == 0)
+        if (Query.Length == 0 && StateFilter.Length == 0 && TypeFilter.Length == 0)
             return Page();
 
         if (!int.TryParse(page, out var pageNum) || pageNum < 0)
@@ -76,6 +81,8 @@ public class SearchModel : PageModel
 
         if (StateFilter.Length > 0)
             queryable = queryable.Where(p => p.State == StateFilter);
+        if (TypeFilter.Length > 0)
+            queryable = queryable.Where(p => p.TypeCode == TypeFilter);
 
         queryable = queryable.OrderBy(p => p.CompanyName).ThenBy(p => p.EIN);
 
@@ -87,7 +94,8 @@ public class SearchModel : PageModel
         {
             var match = await queryable.FirstAsync();
             var backUrl = "/Search?q=" + Uri.EscapeDataString(Query)
-                + (StateFilter.Length > 0 ? "&state=" + Uri.EscapeDataString(StateFilter) : "");
+                + (StateFilter.Length > 0 ? "&state=" + Uri.EscapeDataString(StateFilter) : "")
+                + (TypeFilter.Length > 0 ? "&type=" + Uri.EscapeDataString(TypeFilter) : "");
             return RedirectToPage("/Details", new { id = match.EIN, back = backUrl });
         }
 

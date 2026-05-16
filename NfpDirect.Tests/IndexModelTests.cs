@@ -188,7 +188,7 @@ public class IndexModelTests
     [Fact]
     public async Task TypeFilter_FiltersByTypeCode()
     {
-        using var db = CreateDb(nameof(TypeFilter_FiltersByTypeCode));
+        using var db = CreateDb("Index_TypeFilter_FiltersByTypeCode");
         db.Pub78.AddRange(
             new Pub78 { EIN = "111111111", CompanyName = "CHURCH ORG", TypeCode = "3", Country = "US" },
             new Pub78 { EIN = "222222222", CompanyName = "CIVIC ORG", TypeCode = "4", Country = "US" }
@@ -206,7 +206,7 @@ public class IndexModelTests
     [Fact]
     public async Task TypeFilter_InvalidCode_IsIgnored()
     {
-        using var db = CreateDb(nameof(TypeFilter_InvalidCode_IsIgnored));
+        using var db = CreateDb("Index_TypeFilter_InvalidCode_IsIgnored");
         db.Pub78.Add(new Pub78 { EIN = "111111111", CompanyName = "SOME ORG", TypeCode = "3", Country = "US" });
         await db.SaveChangesAsync();
 
@@ -220,7 +220,7 @@ public class IndexModelTests
     [Fact]
     public async Task TypeFilter_CombinedWithState()
     {
-        using var db = CreateDb(nameof(TypeFilter_CombinedWithState));
+        using var db = CreateDb("Index_TypeFilter_CombinedWithState");
         db.Pub78.AddRange(
             new Pub78 { EIN = "111111111", CompanyName = "IL 501c3", State = "IL", TypeCode = "3", Country = "US" },
             new Pub78 { EIN = "222222222", CompanyName = "IL 501c4", State = "IL", TypeCode = "4", Country = "US" },
