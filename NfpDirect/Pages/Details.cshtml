@@ -12,6 +12,36 @@
         ViewData["CanonicalUrl"] = $"{ViewContext.HttpContext.Request.Scheme}://{ViewContext.HttpContext.Request.Host}/Details?id={Uri.EscapeDataString(Model.Id)}";
 }
 
+@section Head {
+@if (Model.Pub78 != null)
+{
+    var ldNonce = ViewContext.HttpContext.Items["csp-nonce"] as string ?? "";
+    var ldPc = Model.Postcard;
+    var ld = new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "NGO",
+        ["name"] = name,
+        ["identifier"] = TypeCodeHelper.FormatEin(Model.Id)
+    };
+    if (ldPc != null)
+    {
+        var addr = new System.Collections.Generic.Dictionary<string, object> { ["@type"] = "PostalAddress" };
+        var streetParts = new[] { ldPc.OrgAddressLine1, ldPc.OrgAddressLine2 }
+            .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+        if (streetParts.Length > 0) addr["streetAddress"] = string.Join(", ", streetParts);
+        if (!string.IsNullOrWhiteSpace(ldPc.OrgCity)) addr["addressLocality"] = ldPc.OrgCity!.Trim();
+        if (!string.IsNullOrWhiteSpace(ldPc.OrgState)) addr["addressRegion"] = ldPc.OrgState!.Trim();
+        if (!string.IsNullOrWhiteSpace(ldPc.OrgPostalCode)) addr["postalCode"] = ldPc.OrgPostalCode!.Trim();
+        if (!string.IsNullOrWhiteSpace(ldPc.OrgCountry)) addr["addressCountry"] = ldPc.OrgCountry!.Trim();
+        if (addr.Count > 1) ld["address"] = addr;
+        var ldUrl = TypeCodeHelper.NormalizeUrl(ldPc.WebsiteURL);
+        if (ldUrl != null) ld["url"] = ldUrl;
+    }
+    var ldJson = System.Text.Json.JsonSerializer.Serialize(ld);
+    <script type="application/ld+json" nonce="@ldNonce">@Html.Raw(ldJson)</script>
+}
+}
 
 <div class="mb-2">
     <a href="@Model.BackUrl" class="btn btn-sm btn-outline-secondary">← Back</a>

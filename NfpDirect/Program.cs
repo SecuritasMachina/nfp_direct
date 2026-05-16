@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.StaticFiles;
@@ -89,16 +90,18 @@ app.UseResponseCompression();
 
 app.Use(async (ctx, next) =>
 {
+    var nonce = Convert.ToBase64String(RandomNumberGenerator.GetBytes(18));
+    ctx.Items["csp-nonce"] = nonce;
+
     ctx.Response.Headers["X-Content-Type-Options"] = "nosniff";
     ctx.Response.Headers["X-Frame-Options"] = "SAMEORIGIN";
     ctx.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
     ctx.Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
     ctx.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
     ctx.Response.Headers["Cross-Origin-Resource-Policy"] = "same-origin";
-    // CSP: no inline scripts; CDN sources for Bootstrap + Font Awesome
     ctx.Response.Headers["Content-Security-Policy"] =
         "default-src 'none'; " +
-        "script-src https://cdn.jsdelivr.net; " +
+        $"script-src https://cdn.jsdelivr.net 'nonce-{nonce}'; " +
         "style-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
         "font-src https://cdnjs.cloudflare.com; " +
         "img-src 'self'; " +

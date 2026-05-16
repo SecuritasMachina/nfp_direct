@@ -998,6 +998,26 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 87 — JSON-LD Organization Schema on Details Page (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Program.cs`**
+- Added `using System.Security.Cryptography;`
+- Middleware now generates a per-request cryptographic nonce (`RandomNumberGenerator.GetBytes(18)` → base64) and stores it in `HttpContext.Items["csp-nonce"]`
+- CSP `script-src` updated from `https://cdn.jsdelivr.net` to `https://cdn.jsdelivr.net 'nonce-{nonce}'` so the JSON-LD inline script is allowed without `'unsafe-inline'`
+
+**`NfpDirect/Pages/Details.cshtml`**
+- Added `@section Head { }` block that emits a `<script type="application/ld+json" nonce="...">` block when `Model.Pub78 != null`
+- JSON-LD payload: `@context`, `@type: NGO`, `name` (TitleCase), `identifier` (formatted EIN), `address` (PostalAddress with street, locality, region, postal, country from Postcard), `url` (via `NormalizeUrl`)
+- Uses `System.Text.Json.JsonSerializer` for safe serialization; nonce read from `HttpContext.Items["csp-nonce"]`
+- Address and URL are included only when Postcard data is present and fields are non-empty
+
+### Impact
+- Every found-org Detail page now serves Schema.org `NGO` structured data eligible for Google rich results / knowledge panel
+- Nonce approach preserves CSP strength — no `'unsafe-inline'` added
+- 155 tests passing
+
 ## Iteration 86 — Details: EIN Format Validation Before DB Query (2026-05-16)
 
 ### Changes
