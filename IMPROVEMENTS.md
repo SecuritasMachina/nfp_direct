@@ -998,6 +998,29 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 69 — Fix Details Canonical URL; Add noindex to Search (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Shared/_Layout.cshtml`**
+- Changed canonical `<link>` and `og:url` to use `ViewData["CanonicalUrl"]` when set, falling back to path-only
+- **Before**: both always used `scheme://host/path` (no query params) — same canonical for every org's Details page
+- **After**: pages can opt into a precise canonical that includes relevant query params
+
+**`NfpDirect/Pages/Details.cshtml`**
+- Sets `ViewData["CanonicalUrl"]` to `scheme://host/Details?id={EIN}` when Pub78 is found
+- **Before**: canonical for every org detail page was `https://example.com/Details` (identical for all ~1.8M orgs)
+- **After**: each org has its own canonical URL including its EIN
+
+**`NfpDirect/Pages/Search.cshtml`**
+- Sets `ViewData["Robots"] = "noindex, follow"` so search result pages are excluded from crawlers
+- **Before**: `/Search?q=...` pages were indexable, exposing user-generated queries to crawlers
+- **After**: search result pages excluded from indexing; browsing/detail pages unaffected
+
+### Impact
+- Eliminates a significant SEO defect: all ~1.8M org detail pages were canonicalized to the same URL
+- Prevents search engines from indexing ephemeral search result pages
+
 ## Iteration 68 — Terminated Badge on All Listing Pages (2026-05-16)
 
 ### Changes
