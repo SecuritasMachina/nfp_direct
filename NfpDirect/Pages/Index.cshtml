@@ -36,6 +36,7 @@
 <div class="d-flex justify-content-between align-items-center mb-2">
     <h1 class="h4 mb-0">
         Non-Profit Organizations@(indexStateName != null ? $" in {indexStateName}" : "") — Page @(Model.PageNumber + 1)
+        <small class="text-muted fw-normal ms-2 fs-6">@Model.TotalCount.ToString("N0") total</small>
     </h1>
     <div>
         @if (Model.PageNumber > 0)

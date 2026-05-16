@@ -998,6 +998,27 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 93 — Browse Page: Show Total Organization Count (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml.cs`**
+- Added `public long TotalCount { get; private set; }` property
+- Added `TotalCount = await queryable.LongCountAsync();` before fetching the page — count respects the current state filter
+- Count is covered by output cache (60s TTL per state/page combination)
+
+**`NfpDirect/Pages/Index.cshtml`**
+- Page heading now includes `<small class="text-muted">X,XXX,XXX total</small>` after the page number
+
+**`NfpDirect.Tests/IndexModelTests.cs`**
+- Added `TotalCount_ReflectsAllOrgs` — verifies count equals total DB rows when no filter
+- Added `TotalCount_ReflectsStateFilter` — verifies count is limited by state filter
+
+### Impact
+- Users browsing can see total org count ("1,847,302 total") directly in the heading without navigating to the last page
+- State filter pages show count for that state (e.g., "14,832 total" for Illinois)
+- 157 tests passing
+
 ## Iteration 92 — Sitemap `<link>` in Head + Browse/ByPostcard Rich Snippet Robots (2026-05-16)
 
 ### Changes
