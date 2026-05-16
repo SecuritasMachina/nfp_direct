@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 90 — Details Page: noindex on 404 + Rich Snippet Robots Directives (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Details.cshtml`**
+- **Bug fix**: When `Model.Pub78 == null` (org not found or invalid EIN → HTTP 404), now sets `ViewData["Robots"] = "noindex"` — previously no robots meta was emitted, allowing Google to index soft-404 pages
+- When `Model.Pub78 != null` (found org), sets `ViewData["Robots"] = "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"` — explicitly grants Google permission to use the full page text and large image previews in search snippets
+
+### Impact
+- Fixes a soft-404 indexing leak: not-found Detail pages are now explicitly noindexed rather than relying on Google to infer 404 status from the HTTP status code
+- Found-org pages get richer Google search result presentation (longer text snippets, large image previews)
+- 155 tests passing
+
 ## Iteration 89 — BreadcrumbList JSON-LD on Details Page (2026-05-16)
 
 ### Changes

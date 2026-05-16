@@ -9,7 +9,14 @@
         ? $"Non-profit organization details for {name} (EIN {TypeCodeHelper.FormatEin(Model.Id)})."
         : $"EIN {TypeCodeHelper.FormatEin(Model.Id)} not found.";
     if (Model.Pub78 != null)
+    {
         ViewData["CanonicalUrl"] = $"{ViewContext.HttpContext.Request.Scheme}://{ViewContext.HttpContext.Request.Host}/Details?id={Uri.EscapeDataString(Model.Id)}";
+        ViewData["Robots"] = "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1";
+    }
+    else
+    {
+        ViewData["Robots"] = "noindex";
+    }
 }
 
 @section Head {
