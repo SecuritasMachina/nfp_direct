@@ -107,13 +107,13 @@ else
                     {
                         <span class="text-muted me-2">No website found.</span>
                         <a class="btn btn-outline-secondary me-2" target="_blank" rel="noopener noreferrer"
-                           href="https://www.google.com/search?q=@Uri.EscapeDataString(pc.CompanyName ?? "")">
+                           href="https://www.google.com/search?q=@Uri.EscapeDataString(pc.CompanyName ?? name)">
                             <i class="fab fa-google" aria-hidden="true"></i> Try Google
                         </a>
                     }
                     <a class="btn btn-outline-primary" target="_blank" rel="noopener noreferrer"
-                       href="https://www.google.com/search?q=@Uri.EscapeDataString(pc.CompanyName ?? "")">
-                        <i class="fab fa-google" aria-hidden="true"></i> Google @pc.CompanyName
+                       href="https://www.google.com/search?q=@Uri.EscapeDataString(pc.CompanyName ?? name)">
+                        <i class="fab fa-google" aria-hidden="true"></i> Google @TypeCodeHelper.TitleCase(pc.CompanyName ?? name)
                     </a>
                 </div>
             }
