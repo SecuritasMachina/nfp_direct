@@ -226,8 +226,8 @@ public class TypeCodeHelperTests
         Assert.Equal("http://example.org", TypeCodeHelper.NormalizeUrl("http://example.org"));
 
     [Fact]
-    public void NormalizeUrl_NoScheme_PrependsHttp() =>
-        Assert.Equal("http://example.org", TypeCodeHelper.NormalizeUrl("example.org"));
+    public void NormalizeUrl_NoScheme_PrependsHttps() =>
+        Assert.Equal("https://example.org", TypeCodeHelper.NormalizeUrl("example.org"));
 
     [Fact]
     public void NormalizeUrl_FtpScheme_ReturnsNull() =>

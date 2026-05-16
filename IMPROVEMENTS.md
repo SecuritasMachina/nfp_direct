@@ -998,6 +998,22 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 79 — NormalizeUrl Prefers HTTPS for Bare Domain URLs (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Helpers/TypeCodeHelper.cs`**
+- `NormalizeUrl`: bare domain/path URLs (no scheme) now get `https://` prepended instead of `http://`
+- **Before**: `example.org` → `http://example.org`
+- **After**: `example.org` → `https://example.org`
+
+**`NfpDirect.Tests/TypeCodeHelperTests.cs`**
+- Updated `NormalizeUrl_NoScheme_PrependsHttp` → `NormalizeUrl_NoScheme_PrependsHttps` to match new behavior
+
+### Impact
+- Nearly all nonprofit websites today support HTTPS; defaulting to `https://` avoids a redirect round-trip and improves user security for org website links
+- Existing `http://` and `https://` explicit URLs are returned unchanged — only bare-domain entries are affected
+
 ## Iteration 78 — Expand Sitemap with State-Filtered Browse Pages (2026-05-16)
 
 ### Changes

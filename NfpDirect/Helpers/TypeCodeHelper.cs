@@ -128,7 +128,7 @@ public static class TypeCodeHelper
         var slashIdx = trimmed.IndexOf('/');
         if (colonIdx >= 0 && (slashIdx < 0 || colonIdx < slashIdx))
             return null;
-        return "http://" + trimmed;
+        return "https://" + trimmed;
     }
 
     public static string FormatMoney(string? v)
