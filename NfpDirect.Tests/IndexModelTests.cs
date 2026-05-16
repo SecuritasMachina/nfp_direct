@@ -45,7 +45,7 @@ public class IndexModelTests
         using var db = CreateDb(nameof(EmptyDatabase_ReturnsNoEntries));
         var model = CreateModel(db);
 
-        await model.OnGetAsync(page: null, state: null);
+        await model.OnGetAsync(page: null, state: null, type: null);
 
         Assert.Empty(model.Entries);
         Assert.Equal(0, model.PageNumber);
@@ -58,7 +58,7 @@ public class IndexModelTests
         using var db = CreateDb(nameof(NonNumericPage_ClampsToZero));
         var model = CreateModel(db);
 
-        await model.OnGetAsync(page: "foo", state: null);
+        await model.OnGetAsync(page: "foo", state: null, type: null);
 
         Assert.Equal(0, model.PageNumber);
     }
@@ -69,7 +69,7 @@ public class IndexModelTests
         using var db = CreateDb(nameof(NegativePage_ClampsToZero));
         var model = CreateModel(db);
 
-        await model.OnGetAsync(page: "-3", state: null);
+        await model.OnGetAsync(page: "-3", state: null, type: null);
 
         Assert.Equal(0, model.PageNumber);
     }
@@ -83,7 +83,7 @@ public class IndexModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(page: null, state: null);
+        await model.OnGetAsync(page: null, state: null, type: null);
 
         Assert.Equal(50, model.Entries.Count);
         Assert.True(model.HasNextPage);
@@ -98,7 +98,7 @@ public class IndexModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(page: null, state: null);
+        await model.OnGetAsync(page: null, state: null, type: null);
 
         Assert.Equal(10, model.Entries.Count);
         Assert.False(model.HasNextPage);
@@ -113,7 +113,7 @@ public class IndexModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(page: null, state: null);
+        await model.OnGetAsync(page: null, state: null, type: null);
 
         Assert.Single(model.Entries);
         Assert.NotNull(model.Entries[0].Postcard);
@@ -129,7 +129,7 @@ public class IndexModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(page: "1", state: null);
+        await model.OnGetAsync(page: "1", state: null, type: null);
 
         Assert.Equal(1, model.PageNumber);
         Assert.Equal(5, model.Entries.Count);
@@ -147,7 +147,7 @@ public class IndexModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(page: null, state: "IL");
+        await model.OnGetAsync(page: null, state: "IL", type: null);
 
         Assert.Equal("IL", model.StateFilter);
         Assert.Single(model.Entries);
@@ -163,7 +163,7 @@ public class IndexModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(page: null, state: null);
+        await model.OnGetAsync(page: null, state: null, type: null);
 
         Assert.Equal(7, model.TotalCount);
     }
@@ -180,9 +180,60 @@ public class IndexModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(page: null, state: "IL");
+        await model.OnGetAsync(page: null, state: "IL", type: null);
 
         Assert.Equal(2, model.TotalCount);
+    }
+
+    [Fact]
+    public async Task TypeFilter_FiltersByTypeCode()
+    {
+        using var db = CreateDb(nameof(TypeFilter_FiltersByTypeCode));
+        db.Pub78.AddRange(
+            new Pub78 { EIN = "111111111", CompanyName = "CHURCH ORG", TypeCode = "3", Country = "US" },
+            new Pub78 { EIN = "222222222", CompanyName = "CIVIC ORG", TypeCode = "4", Country = "US" }
+        );
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(page: null, state: null, type: "3");
+
+        Assert.Equal("3", model.TypeFilter);
+        Assert.Single(model.Entries);
+        Assert.Equal("111111111", model.Entries[0].Pub78.EIN);
+    }
+
+    [Fact]
+    public async Task TypeFilter_InvalidCode_IsIgnored()
+    {
+        using var db = CreateDb(nameof(TypeFilter_InvalidCode_IsIgnored));
+        db.Pub78.Add(new Pub78 { EIN = "111111111", CompanyName = "SOME ORG", TypeCode = "3", Country = "US" });
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(page: null, state: null, type: "INVALID");
+
+        Assert.Equal("", model.TypeFilter);
+        Assert.Single(model.Entries);
+    }
+
+    [Fact]
+    public async Task TypeFilter_CombinedWithState()
+    {
+        using var db = CreateDb(nameof(TypeFilter_CombinedWithState));
+        db.Pub78.AddRange(
+            new Pub78 { EIN = "111111111", CompanyName = "IL 501c3", State = "IL", TypeCode = "3", Country = "US" },
+            new Pub78 { EIN = "222222222", CompanyName = "IL 501c4", State = "IL", TypeCode = "4", Country = "US" },
+            new Pub78 { EIN = "333333333", CompanyName = "TX 501c3", State = "TX", TypeCode = "3", Country = "US" }
+        );
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(page: null, state: "IL", type: "3");
+
+        Assert.Single(model.Entries);
+        Assert.Equal("111111111", model.Entries[0].Pub78.EIN);
+        Assert.Equal(1, model.TotalCount);
     }
 }
 

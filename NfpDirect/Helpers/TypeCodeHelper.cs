@@ -4,7 +4,7 @@ namespace NfpDirect.Helpers;
 
 public static class TypeCodeHelper
 {
-    private static readonly Dictionary<string, string> Labels = new(StringComparer.OrdinalIgnoreCase)
+    public static readonly IReadOnlyDictionary<string, string> Labels = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
     {
         ["3"] = "Public Charity", ["4"] = "Social Welfare", ["5"] = "Labor Union",
         ["6"] = "Agricultural", ["7"] = "Social Club", ["8"] = "Fraternal Beneficiary",

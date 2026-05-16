@@ -4,17 +4,24 @@
     var indexStateName = Model.StateFilter.Length > 0
         ? TypeCodeHelper.StateName(Model.StateFilter)
         : null;
-    ViewData["Title"] = indexStateName != null
-        ? $"Browse Non-Profits in {indexStateName} — Page {Model.PageNumber + 1}"
-        : $"Browse Non-Profits — Page {Model.PageNumber + 1}";
     ViewData["Description"] = indexStateName != null
         ? $"Browse IRS-registered non-profit organizations in {indexStateName}. Filter by state, search by name or 9-digit EIN."
         : "Browse IRS-registered non-profit organizations by name. Search by organization name, 9-digit EIN, or filter by state.";
+    var indexTypeLabel = Model.TypeFilter.Length > 0 ? TypeCodeHelper.Label(Model.TypeFilter) : null;
+    if (indexStateName != null && indexTypeLabel != null)
+        ViewData["Title"] = $"Browse {indexTypeLabel} in {indexStateName} — Page {Model.PageNumber + 1}";
+    else if (indexTypeLabel != null)
+        ViewData["Title"] = $"Browse {indexTypeLabel} Organizations — Page {Model.PageNumber + 1}";
+    else if (indexStateName != null)
+        ViewData["Title"] = $"Browse Non-Profits in {indexStateName} — Page {Model.PageNumber + 1}";
+    else
+        ViewData["Title"] = $"Browse Non-Profits — Page {Model.PageNumber + 1}";
     var indexBackUrl = Uri.EscapeDataString("/" + (ViewContext.HttpContext.Request.QueryString.Value ?? ""));
     var stateQs = Model.StateFilter.Length > 0 ? $"&state={Uri.EscapeDataString(Model.StateFilter)}" : "";
+    var typeQs = Model.TypeFilter.Length > 0 ? $"&type={Uri.EscapeDataString(Model.TypeFilter)}" : "";
     var req = ViewContext.HttpContext.Request;
-    var indexPageQs = Model.PageNumber > 0 ? $"?page={Model.PageNumber}{stateQs}"
-        : Model.StateFilter.Length > 0 ? $"?{stateQs[1..]}"
+    var indexPageQs = Model.PageNumber > 0 ? $"?page={Model.PageNumber}{stateQs}{typeQs}"
+        : (Model.StateFilter.Length > 0 || Model.TypeFilter.Length > 0) ? $"?{(stateQs + typeQs).TrimStart('&')}"
         : "";
     ViewData["CanonicalUrl"] = $"{req.Scheme}://{req.Host}/{indexPageQs}";
     ViewData["Robots"] = Model.PageNumber > 0
@@ -30,11 +37,11 @@
 @section Head {
     @if (Model.PageNumber > 0)
     {
-        <link rel="prev" href="/?page=@(Model.PageNumber - 1)@stateQs" />
+        <link rel="prev" href="/?page=@(Model.PageNumber - 1)@stateQs@typeQs" />
     }
     @if (Model.HasNextPage)
     {
-        <link rel="next" href="/?page=@(Model.PageNumber + 1)@stateQs" />
+        <link rel="next" href="/?page=@(Model.PageNumber + 1)@stateQs@typeQs" />
     }
     @if (Model.PageNumber == 0 && Model.StateFilter.Length == 0)
     {
@@ -65,7 +72,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-2">
     <h1 class="h4 mb-0">
-        Non-Profit Organizations@(indexStateName != null ? $" in {indexStateName}" : "") — Page @(Model.PageNumber + 1) of @Model.TotalPages.ToString("N0")
+        @(indexTypeLabel != null ? indexTypeLabel + " Organizations" : "Non-Profit Organizations")@(indexStateName != null ? $" in {indexStateName}" : "") — Page @(Model.PageNumber + 1) of @Model.TotalPages.ToString("N0")
         <small class="text-muted fw-normal ms-2 fs-6">@Model.TotalCount.ToString("N0") total</small>
     </h1>
     <div>
@@ -89,8 +96,22 @@
         <input type="search" name="state" class="form-control" placeholder="Filter by state (e.g. IL)"
                maxlength="2" value="@Model.StateFilter" aria-label="Filter by state"
                list="us-states" autocomplete="off" />
+        <select name="type" class="form-select form-select-sm" aria-label="Filter by type" style="max-width:180px">
+            <option value="">All Types</option>
+            @foreach (var kv in NfpDirect.Helpers.TypeCodeHelper.Labels.OrderBy(x => x.Value))
+            {
+                if (Model.TypeFilter == kv.Key)
+                {
+                    <option value="@kv.Key" selected>@kv.Value</option>
+                }
+                else
+                {
+                    <option value="@kv.Key">@kv.Value</option>
+                }
+            }
+        </select>
         <button class="btn btn-outline-secondary" type="submit">Filter</button>
-        @if (Model.StateFilter.Length > 0)
+        @if (Model.StateFilter.Length > 0 || Model.TypeFilter.Length > 0)
         {
             <a class="btn btn-outline-secondary" href="/">Clear</a>
         }
@@ -174,7 +195,7 @@
 <nav aria-label="Page navigation" class="d-flex justify-content-between mt-3 mb-4">
     @if (Model.PageNumber > 0)
     {
-        <a class="btn btn-outline-primary" href="/?page=@(Model.PageNumber - 1)@stateQs">
+        <a class="btn btn-outline-primary" href="/?page=@(Model.PageNumber - 1)@stateQs@typeQs">
             <i class="fa fa-chevron-left" aria-hidden="true"></i> Previous
         </a>
     }
@@ -184,7 +205,7 @@
     }
     @if (Model.HasNextPage)
     {
-        <a class="btn btn-outline-primary" href="/?page=@(Model.PageNumber + 1)@stateQs">
+        <a class="btn btn-outline-primary" href="/?page=@(Model.PageNumber + 1)@stateQs@typeQs">
             Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
         </a>
     }

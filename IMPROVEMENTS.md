@@ -998,6 +998,38 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 101 — Type Code Filter on Browse Page (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Helpers/TypeCodeHelper.cs`**
+- Changed `Labels` from `private static readonly Dictionary` to `public static readonly IReadOnlyDictionary` so views and page models can enumerate it
+
+**`NfpDirect/Pages/Index.cshtml.cs`**
+- Added `TypeFilter` property (string, defaults to `""`)
+- Added `type` query parameter to `OnGetAsync`, validated against `TypeCodeHelper.Labels.ContainsKey` (rejects arbitrary values)
+- Added `.Where(p => p.TypeCode == TypeFilter)` to the queryable when TypeFilter is non-empty
+- Output cache BrowsePage policy now varies by `"type"` in addition to `"page"` and `"state"`
+
+**`NfpDirect/Pages/Index.cshtml`**
+- Filter form: added `<select name="type">` dropdown with "All Types" default + all known type codes sorted alphabetically, preserving selection
+- "Clear" link: now appears when either state or type filter is active, links back to `/`
+- Pagination `prev`/`next` links (both top and bottom): include `@typeQs` to preserve filter across pages
+- Heading: shows type label when filtered (e.g. "Public Charity Organizations in Illinois")
+- Title/canonical URL/robots all account for type filter
+
+**`NfpDirect.Tests/IndexModelTests.cs`**
+- Updated all existing `OnGetAsync` calls to include `type: null`
+- Added `TypeFilter_FiltersByTypeCode`, `TypeFilter_InvalidCode_IsIgnored`, `TypeFilter_CombinedWithState`
+
+### Impact
+- Users can now filter the browse page by IRC 501(c) type code (Public Charity, Social Welfare, etc.) in addition to state — narrowing ~1.8M orgs to a specific type
+- Type filter composes with state filter; both preserved across pagination
+- Invalid type codes are silently rejected — no arbitrary column injection
+- 162 tests passing
+
+---
+
 ## Iteration 100 — WebSite JSON-LD with SearchAction on Home Page (2026-05-16)
 
 ### Changes
