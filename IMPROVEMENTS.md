@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 55 — Details Page: CompanyName Null Fallback in Google Links (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Details.cshtml`**
+- "Try Google" and "Google [Org Name]" links: `pc.CompanyName ?? ""` → `pc.CompanyName ?? name`
+- "Google @pc.CompanyName" button text: → `@TypeCodeHelper.TitleCase(pc.CompanyName ?? name)`
+- **Problem**: If `pc.CompanyName` was null, "Try Google" searched for an empty string, and the button showed "Google " (trailing space)
+- `name` is the org's display name already resolved at page top from `pub.CompanyName` or EIN
+
+### Impact
+- Google links now always have a meaningful query even if the postcard's `CompanyName` is null
+- Button text shows the proper title-cased name instead of trailing space
+
 ## Iteration 54 — State Filter Shown in Browse/ByPostcard Page Titles (2026-05-16)
 
 ### Changes
