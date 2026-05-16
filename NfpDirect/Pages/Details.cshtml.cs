@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using NfpDirect.Data;
 using NfpDirect.Models;
 
 namespace NfpDirect.Pages;
 
+[OutputCache(PolicyName = "DetailsPage")]
 public class DetailsModel : PageModel
 {
     private readonly NfpDbContext _db;
