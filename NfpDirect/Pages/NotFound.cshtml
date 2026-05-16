@@ -2,6 +2,7 @@
 @model NotFoundModel
 @{
     ViewData["Title"] = "Page Not Found";
+    ViewData["Robots"] = "noindex";
     Response.StatusCode = 404;
 }
 
