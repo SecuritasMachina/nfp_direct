@@ -46,11 +46,11 @@ builder.Services.AddRateLimiter(opts =>
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                 QueueLimit = 0
             }));
-    opts.OnRejected = async (context, token) =>
+    opts.OnRejected = (context, _) =>
     {
         context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
         context.HttpContext.Response.Headers.RetryAfter = "60";
-        await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", token);
+        return ValueTask.CompletedTask;
     };
 });
 
@@ -85,6 +85,7 @@ app.Use(async (ctx, next) =>
     ctx.Response.Headers["X-Content-Type-Options"] = "nosniff";
     ctx.Response.Headers["X-Frame-Options"] = "SAMEORIGIN";
     ctx.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    ctx.Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
     // CSP: no inline scripts; CDN sources for Bootstrap + Font Awesome
     ctx.Response.Headers["Content-Security-Policy"] =
         "default-src 'none'; " +

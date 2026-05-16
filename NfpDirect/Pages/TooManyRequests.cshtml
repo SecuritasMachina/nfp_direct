@@ -1,0 +1,13 @@
+@page "/429"
+@model TooManyRequestsModel
+@{
+    ViewData["Title"] = "Too Many Requests";
+}
+
+<div class="text-center py-5">
+    <h1 class="display-4 text-muted">429</h1>
+    <p class="lead">You've made too many search requests. Please wait a moment and try again.</p>
+    <a href="/" class="btn btn-primary">Browse Organizations</a>
+    &nbsp;
+    <a href="/Search" class="btn btn-outline-secondary">Try Again</a>
+</div>

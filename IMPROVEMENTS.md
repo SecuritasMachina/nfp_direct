@@ -723,3 +723,25 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 - Passes OWASP CSP audit — no wildcards, no `'unsafe-inline'`, no `'unsafe-eval'`
 - Prevents XSS script injection even if a rendering bug exists: unapproved script sources are blocked by the browser
 - Supplements the existing XSS protection from Razor auto-escaping with a browser-enforced defense layer
+
+---
+
+## Iteration 30 — Permissions-Policy Header, Branded 429 Page (2026-05-16)
+
+### Changes
+
+**`Permissions-Policy` header** (`Program.cs`)
+- Added `Permissions-Policy: camera=(), microphone=(), geolocation=()` in security-header middleware
+- Signals to the browser that this site never uses camera, microphone, or geolocation APIs
+- Completes the OWASP recommended security header set alongside X-Content-Type-Options, X-Frame-Options, Referrer-Policy, and CSP
+
+**Branded 429 page** (`Pages/TooManyRequests.cshtml`, `Pages/TooManyRequests.cshtml.cs`, `Program.cs`)
+- Created `Pages/TooManyRequests.cshtml` at route `/429` matching the `UseStatusCodePagesWithReExecute("/{0}")` pattern
+- Rate limiter `OnRejected` now sets 429 status + `Retry-After: 60` but writes no body
+- `UseStatusCodePagesWithReExecute` re-executes the request as `/429` and serves the branded layout
+- Previously: rate-limited users saw raw plain text "Too many requests. Please try again later." with no navigation
+- Now: users see the site navbar, "429" heading, and links to browse/search
+
+### Impact
+- Permissions-Policy: passes W3C / OWASP security header audit for feature policy
+- 429 page: rate-limited users see a navigable branded page instead of a dead-end plain text response
