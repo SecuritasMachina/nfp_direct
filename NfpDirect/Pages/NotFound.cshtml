@@ -9,7 +9,15 @@
 <div class="text-center py-5">
     <h1 class="display-4 text-muted">404</h1>
     <p class="lead">That page doesn't exist.</p>
-    <a href="/" class="btn btn-primary">Back to Organizations</a>
-    &nbsp;
-    <a href="/Search" class="btn btn-outline-secondary">Search</a>
+    <form method="get" action="/Search" class="d-flex justify-content-center mb-3" role="search">
+        <div class="input-group search-form-group">
+            <input type="search" name="q" class="form-control"
+                   placeholder="Search for an organization or EIN…"
+                   aria-label="Search organizations" autofocus />
+            <button type="submit" class="btn btn-primary" aria-label="Search">
+                <i class="fa fa-search" aria-hidden="true"></i> Search
+            </button>
+        </div>
+    </form>
+    <a href="/" class="btn btn-outline-secondary">Browse All Organizations</a>
 </div>

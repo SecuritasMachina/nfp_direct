@@ -998,6 +998,22 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 83 — Search Form on 404 Page (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/NotFound.cshtml`**
+- Replaced standalone "Search" button with an inline search form (input + submit)
+- Form has `role="search"` and `autofocus` for immediate keyboard access
+- Replaced "Back to Organizations" text with "Browse All Organizations" for clarity
+
+**`NfpDirect/wwwroot/css/site.css`**
+- Added `.search-form-group { max-width: 400px; }` (avoiding inline style CSP violation)
+
+### Impact
+- Users who land on a 404 can immediately search without navigating to /Search first
+- The form is the fastest path to recovery: autofocused, submits to /Search with the full search experience
+
 ## Iteration 82 — Redirect /favicon.ico to /favicon.svg (2026-05-16)
 
 ### Changes
