@@ -998,6 +998,21 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 52 — Server-Side State Filter Validation (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Search.cshtml.cs`**, **`Index.cshtml.cs`**, **`ByPostcard.cshtml.cs`**
+- After parsing the `state` query parameter, validate: must be exactly 2 ASCII letters or reset to `""`
+- `maxlength="2"` on the HTML input is client-side only and can be bypassed; server-side validation prevents malformed codes from reaching the database
+
+**`NfpDirect.Tests/SearchModelTests.cs`**
+- Added `InvalidStateFilter_IsIgnored` theory (4 cases: "INVALID", "123", "I", "12"): confirms malformed state params are cleared and the filter is not applied (114 total tests)
+
+### Impact
+- Invalid state codes like `?state=INVALID` or `?state=123` are now silently dropped instead of running a no-result DB query
+- Consistent validation across all three list endpoints
+
 ## Iteration 51 — Search Page Title Truncation (2026-05-16)
 
 ### Changes

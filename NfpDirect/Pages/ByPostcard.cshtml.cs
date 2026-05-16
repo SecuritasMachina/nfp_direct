@@ -26,6 +26,8 @@ public class ByPostcardModel : PageModel
             pageNum = 0;
         PageNumber = pageNum;
         StateFilter = (state ?? "").Trim().ToUpper();
+        if (StateFilter.Length != 2 || !StateFilter.All(char.IsLetter))
+            StateFilter = "";
 
         var queryable = _db.Postcards.AsNoTracking();
         if (StateFilter.Length > 0)
