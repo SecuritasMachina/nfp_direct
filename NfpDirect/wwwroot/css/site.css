@@ -53,6 +53,10 @@ dl.row dt, dl.row dd {
     }
 }
 
+.state-filter-group {
+    max-width: 220px;
+}
+
 @media print {
     nav, form, .btn, footer { display: none !important; }
     .card { border: 1px solid #ccc !important; box-shadow: none !important; }
