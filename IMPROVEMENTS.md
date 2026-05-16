@@ -823,3 +823,24 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 ### Impact
 - Keyboard-only users: can bypass the navbar with one Tab keypress + Enter, instead of tabbing through all 8 navbar elements
 - Screen reader users: `<main>` appears in all major screen readers' landmark navigation (NVDA, JAWS, VoiceOver)
+
+---
+
+## Iteration 35 — Preconnect Hints, `aria-current="page"` (2026-05-16)
+
+### Changes
+
+**`<link rel="preconnect">` for CDN domains** (`Pages/Shared/_Layout.cshtml`)
+- Added `<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous" />`
+- Added `<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous" />`
+- Placed before the CDN stylesheet links so the TCP+TLS handshake starts immediately on page parse
+- Browsers that support preconnect (all modern browsers) can shave 100–200ms on cold CDN connections
+
+**`aria-current="page"` on active nav links** (`Pages/Shared/_Layout.cshtml`)
+- Added `aria-current="page"` attribute to the Browse and By Postcard nav links when active
+- The Bootstrap `active` class provides visual indication; `aria-current="page"` provides the ARIA equivalent
+- Screen readers (NVDA, JAWS, VoiceOver) now announce the current page in the navigation landmark
+
+### Impact
+- Preconnect: reduces CDN resource load time by eliminating DNS lookup + TCP + TLS setup on first request
+- `aria-current`: screen reader users hear which nav link is the current page without inferring from styling
