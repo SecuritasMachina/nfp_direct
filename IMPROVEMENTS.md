@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 58 — ByPostcard Org Name Linked to Details (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/ByPostcard.cshtml`**
+- Wrapped the organization name in `<a href="/Details?id=...&back=...">` (same back URL pattern as the Details button below)
+- **Before**: Name was plain text; users had to scroll to the "Details" button to navigate
+- **After**: Clicking the name navigates to Details — consistent with Browse and Search, where names are always links
+
+### Impact
+- Consistent UX across all three listing pages (Browse, Search, ByPostcard)
+- The "Details" button below remains for users who prefer explicit buttons
+
 ## Iteration 57 — EIN Shown on ByPostcard List Cards (2026-05-16)
 
 ### Changes
