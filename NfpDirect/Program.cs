@@ -67,6 +67,13 @@ builder.Services.AddOutputCache(opts =>
         .Tag("details"));
 });
 
+builder.Services.AddHsts(opts =>
+{
+    opts.MaxAge = TimeSpan.FromDays(365);
+    opts.IncludeSubDomains = true;
+    opts.Preload = true;
+});
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

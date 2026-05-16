@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 81 — HSTS Preload Configuration (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Program.cs`**
+- Added `AddHsts` with `MaxAge = 365 days`, `IncludeSubDomains = true`, `Preload = true`
+- **Before**: `UseHsts()` used default max-age of 30 days, no includeSubDomains, no preload flag
+- **After**: `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`
+
+### Impact
+- Meets HSTS preload list requirements (1-year max-age + includeSubDomains + preload flag)
+- `includeSubDomains` ensures HTTPS is enforced across the entire domain hierarchy
+- Once submitted to the preload list, browsers enforce HTTPS before any HTTP connection is attempted
+
 ## Iteration 80 — Redirect /Details with No id to Home (2026-05-16)
 
 ### Changes
