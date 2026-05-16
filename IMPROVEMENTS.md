@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 89 — BreadcrumbList JSON-LD on Details Page (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Details.cshtml`**
+- Added a second `<script type="application/ld+json">` block (using the existing CSP nonce) inside `@section Head` containing Schema.org `BreadcrumbList` structured data
+- Breadcrumb: NFP Direct (home) → [Org Name] (canonical Detail URL)
+- Emitted only when `Model.Pub78 != null` (found-org pages only)
+
+### Impact
+- Google uses `BreadcrumbList` to display breadcrumb navigation in search result snippets, replacing the raw URL — improves click-through rate
+- Complements the `NGO` Organization schema added in iteration 87
+- 155 tests passing
+
 ## Iteration 88 — Fix Heading Hierarchy Across All Pages (2026-05-16)
 
 ### Changes

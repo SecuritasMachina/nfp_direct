@@ -40,6 +40,29 @@
     }
     var ldJson = System.Text.Json.JsonSerializer.Serialize(ld);
     <script type="application/ld+json" nonce="@ldNonce">@Html.Raw(ldJson)</script>
+
+    var ldOrigin = $"{ViewContext.HttpContext.Request.Scheme}://{ViewContext.HttpContext.Request.Host}";
+    var ldDetailUrl = $"{ldOrigin}/Details?id={Uri.EscapeDataString(Model.Id)}";
+    var bcld = new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "BreadcrumbList",
+        ["itemListElement"] = new object[]
+        {
+            new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["@type"] = "ListItem", ["position"] = 1,
+                ["name"] = "NFP Direct", ["item"] = ldOrigin + "/"
+            },
+            new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["@type"] = "ListItem", ["position"] = 2,
+                ["name"] = name, ["item"] = ldDetailUrl
+            }
+        }
+    };
+    var bcldJson = System.Text.Json.JsonSerializer.Serialize(bcld);
+    <script type="application/ld+json" nonce="@ldNonce">@Html.Raw(bcldJson)</script>
 }
 }
 
