@@ -107,11 +107,15 @@ public static class TypeCodeHelper
         string.Join(" ", new[] { FormatLocation(city, state), postal?.Trim() }
             .Where(s => !string.IsNullOrWhiteSpace(s)));
 
+    private static readonly HashSet<string> UsCountryVariants = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "US", "USA", "U.S.", "U.S.A.", "UNITED STATES", "UNITED STATES OF AMERICA"
+    };
+
     public static bool ShouldShowCountry(string? country)
     {
         if (string.IsNullOrWhiteSpace(country)) return false;
-        var upper = country.Trim().ToUpperInvariant();
-        return upper != "US" && upper != "USA" && upper != "UNITED STATES";
+        return !UsCountryVariants.Contains(country.Trim());
     }
 
     public static string? NormalizeUrl(string? url)

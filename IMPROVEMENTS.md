@@ -998,6 +998,23 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 84 — ShouldShowCountry: US Variant Coverage (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Helpers/TypeCodeHelper.cs`**
+- Added `UsCountryVariants` HashSet: `US`, `USA`, `U.S.`, `U.S.A.`, `UNITED STATES`, `UNITED STATES OF AMERICA`
+- `ShouldShowCountry` now uses case-insensitive HashSet lookup instead of three equality checks
+- **Before**: only "US", "USA", "UNITED STATES" were suppressed; "U.S." or "UNITED STATES OF AMERICA" would be shown as a foreign country
+- **After**: all common IRS data representations of "United States" are suppressed
+
+**`NfpDirect.Tests/TypeCodeHelperTests.cs`**
+- Added 4-case theory for U.S. variant handling
+
+### Impact
+- Prevents spurious "U.S." or "United States of America" entries from appearing as country labels on org cards
+- 138 tests passing
+
 ## Iteration 83 — Search Form on 404 Page (2026-05-16)
 
 ### Changes

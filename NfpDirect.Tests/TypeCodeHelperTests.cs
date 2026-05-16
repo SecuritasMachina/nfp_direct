@@ -166,6 +166,14 @@ public class TypeCodeHelperTests
     public void ShouldShowCountry_UnitedStates_ReturnsFalse() =>
         Assert.False(TypeCodeHelper.ShouldShowCountry("United States"));
 
+    [Theory]
+    [InlineData("U.S.")]
+    [InlineData("U.S.A.")]
+    [InlineData("UNITED STATES OF AMERICA")]
+    [InlineData("united states of america")]
+    public void ShouldShowCountry_UsVariants_ReturnsFalse(string variant) =>
+        Assert.False(TypeCodeHelper.ShouldShowCountry(variant));
+
     [Fact]
     public void ShouldShowCountry_Canada_ReturnsTrue() =>
         Assert.True(TypeCodeHelper.ShouldShowCountry("Canada"));
