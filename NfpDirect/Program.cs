@@ -89,9 +89,9 @@ app.Use(async (ctx, next) =>
     // CSP: no inline scripts; CDN sources for Bootstrap + Font Awesome
     ctx.Response.Headers["Content-Security-Policy"] =
         "default-src 'none'; " +
-        "script-src cdn.jsdelivr.net; " +
-        "style-src 'self' cdn.jsdelivr.net cdnjs.cloudflare.com; " +
-        "font-src cdnjs.cloudflare.com; " +
+        "script-src https://cdn.jsdelivr.net; " +
+        "style-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+        "font-src https://cdnjs.cloudflare.com; " +
         "img-src 'self'; " +
         "connect-src 'self'; " +
         "base-uri 'self'; " +

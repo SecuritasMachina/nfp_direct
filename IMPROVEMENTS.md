@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 50 — CSP: Lock CDN Hostnames to HTTPS Scheme (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Program.cs`** (CSP middleware)
+- `script-src cdn.jsdelivr.net` → `script-src https://cdn.jsdelivr.net`
+- `style-src 'self' cdn.jsdelivr.net cdnjs.cloudflare.com` → `style-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com`
+- `font-src cdnjs.cloudflare.com` → `font-src https://cdnjs.cloudflare.com`
+
+### Impact
+- CDN hostnames without a scheme prefix allow both HTTP and HTTPS resources; adding `https://` rejects any HTTP-sourced script or stylesheet even if the browser somehow follows a downgraded CDN URL
+- Defense-in-depth alongside the existing SRI hashes — SRI would catch tampered content, but scheme-locking prevents the browser from even fetching over cleartext
+- No functional change for users since all CDN resources are already loaded over HTTPS
+
 ## Iteration 49 — `rel="prev"` / `rel="next"` Pagination Link Elements (2026-05-16)
 
 ### Changes
