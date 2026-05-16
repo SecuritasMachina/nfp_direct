@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 51 — Search Page Title Truncation (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Search.cshtml`**
+- `ViewData["Title"]` now truncates the query to 50 characters (with `…`) in the title tag
+- The displayed query in the form and result count text are unchanged
+- **Problem**: With a 200-char max query, the browser tab title could be 220+ characters — unhelpful in tabs and bad for social sharing
+
+### Impact
+- Browser tabs, bookmarks, and og:title are now readable even with long queries
+- The page `<title>` stays under ~70 characters for typical queries
+
 ## Iteration 50 — CSP: Lock CDN Hostnames to HTTPS Scheme (2026-05-16)
 
 ### Changes
