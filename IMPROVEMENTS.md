@@ -802,3 +802,24 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 ### Impact
 - Error page: consistent with the 404/429 pages — branded, navigable, not a bare alert box
 - Pagination: screen reader users can skip directly to next/previous controls without traversing org cards
+
+---
+
+## Iteration 34 — `<main>` Landmark, Skip-to-Content Link (2026-05-16)
+
+### Changes
+
+**`<main>` landmark** (`Pages/Shared/_Layout.cshtml`)
+- Replaced `<div class="container-fluid px-4">` with `<main id="main-content" class="container-fluid px-4">`
+- The `<main>` element is the primary content landmark — assistive technologies expose it in landmark menus
+- WCAG 2.4.1 (bypass blocks, Level A): presence of a `<main>` element satisfies the requirement
+
+**Skip-to-content link** (`Pages/Shared/_Layout.cshtml`, `wwwroot/css/site.css`)
+- Added `<a href="#main-content" class="skip-link">Skip to main content</a>` as first element inside `<body>`
+- `.skip-link` CSS: offscreen by default (`left: -9999px`), slides on-screen when focused (`left: 0`)
+- Keyboard users pressing Tab on page load get a visible link to bypass the 8-link navbar
+- WCAG 2.4.1 (bypass blocks, Level A): skip link is the recommended implementation technique
+
+### Impact
+- Keyboard-only users: can bypass the navbar with one Tab keypress + Enter, instead of tabbing through all 8 navbar elements
+- Screen reader users: `<main>` appears in all major screen readers' landmark navigation (NVDA, JAWS, VoiceOver)
