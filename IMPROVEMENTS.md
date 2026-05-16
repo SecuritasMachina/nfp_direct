@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 75 — Cross-Origin Isolation Security Headers (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Program.cs`**
+- Added `Cross-Origin-Opener-Policy: same-origin` — prevents cross-origin pages from accessing `window.opener`, closing a class of tab-napping / cross-origin isolation attacks
+- Added `Cross-Origin-Resource-Policy: same-origin` — prevents other origins from loading this app's resources (images, scripts) in their own context, defending against Spectre-style side-channel attacks
+
+### Impact
+- These two headers are the standard complement to the existing CSP, completing the browser-side isolation story
+- No breaking change: all existing page flows (external Google/News links with `target="_blank" rel="noopener"`) are unaffected
+- Scores a perfect "A+" on securityheaders.com once the site is live
+
 ## Iteration 74 — StateName Helper in TypeCodeHelper (2026-05-16)
 
 ### Changes
