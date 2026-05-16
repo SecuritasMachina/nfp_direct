@@ -998,6 +998,18 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 47 — `role="search"` Landmark on Search Forms (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Shared/_Layout.cshtml`** and **`NfpDirect/Pages/Search.cshtml`**
+- Added `role="search"` to both the navbar mini-search form and the full Search page form
+- Per WCAG 2.1 technique ARIA11, search forms should use the `search` landmark role so screen reader users can navigate directly to search functionality
+
+### Impact
+- Screen reader users can jump to the search form via landmark navigation (e.g., "go to search" shortcut in NVDA/JAWS)
+- No visual change
+
 ## Iteration 46 — Website Button Domain Display Consistency (2026-05-16)
 
 ### Changes
