@@ -998,6 +998,37 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 105 — Type Filter on Search Page (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Search.cshtml.cs`**
+- Added `TypeFilter` property, `type` query parameter to `OnGetAsync`, validated against `TypeCodeHelper.Labels.ContainsKey`
+- Added `.Where(p => p.TypeCode == TypeFilter)` when TypeFilter is set
+- EIN-redirect back URL now preserves `type` parameter
+
+**`NfpDirect/Pages/Search.cshtml`**
+- Added `<select name="type">` dropdown with "All Types" default + all type codes sorted alphabetically, preserving selection
+- Added `typeParam` variable; threaded through both sets of prev/next pagination links
+- Layout adjusted to accommodate type dropdown column (`col-lg-6` / `col-lg-2` / `col-lg-3` / `col-sm-1`)
+- Help text updated: "Search by name (partial match), 9-digit EIN, or filter by state and type."
+
+**`NfpDirect.Tests/SearchModelTests.cs`**
+- Updated all existing `OnGetAsync` calls to include `type: null`
+- Added `TypeFilter_FiltersByTypeCode`, `TypeFilter_InvalidCode_IsIgnored`, `TypeFilter_CombinedWithNameSearch`
+- Prefixed InMemory DB names with `"Search_"` to avoid collision with IndexModelTests
+
+**`NfpDirect.Tests/IndexModelTests.cs`**
+- Prefixed shared-name TypeFilter test DB names with `"Index_"` to prevent cross-test collision
+
+### Impact
+- Users can now narrow search results by IRC 501(c) type code — composable with name query and state filter
+- Consistent with the type filter on the Browse page (iteration 101)
+- Invalid type codes rejected without DB query
+- 165 tests passing
+
+---
+
 ## Iteration 104 — Fix: Remove Static sitemap.xml That Shadowed Dynamic Endpoint (2026-05-16)
 
 ### Changes

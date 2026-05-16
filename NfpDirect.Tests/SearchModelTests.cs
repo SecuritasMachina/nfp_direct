@@ -49,7 +49,7 @@ public class SearchModelTests
         using var db = CreateDb(nameof(EmptyQuery_ReturnsPageWithNoResults));
         var model = CreateModel(db);
 
-        await model.OnGetAsync(q: null, state: null, page: null);
+        await model.OnGetAsync(q: null, state: null, type: null, page: null);
 
         Assert.Equal("", model.Query);
         Assert.Empty(model.Results);
@@ -67,7 +67,7 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(q: "HABITAT", state: null, page: null);
+        await model.OnGetAsync(q: "HABITAT", state: null, type: null, page: null);
 
         Assert.Equal("HABITAT", model.Query);
         Assert.Equal(1, model.TotalResults);
@@ -83,7 +83,7 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        var result = await model.OnGetAsync(q: "123456789", state: null, page: null);
+        var result = await model.OnGetAsync(q: "123456789", state: null, type: null, page: null);
 
         var redirect = Assert.IsType<RedirectToPageResult>(result);
         Assert.Equal("/Details", redirect.PageName);
@@ -98,7 +98,7 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(q: "999999999", state: null, page: null);
+        await model.OnGetAsync(q: "999999999", state: null, type: null, page: null);
 
         Assert.Equal(0, model.TotalResults);
         Assert.Empty(model.Results);
@@ -112,7 +112,7 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(q: "TEST", state: null, page: "-5");
+        await model.OnGetAsync(q: "TEST", state: null, type: null, page: "-5");
 
         Assert.Equal(0, model.PageNumber);
     }
@@ -125,7 +125,7 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(q: "TEST", state: null, page: "abc");
+        await model.OnGetAsync(q: "TEST", state: null, type: null, page: "abc");
 
         Assert.Equal(0, model.PageNumber);
     }
@@ -139,7 +139,7 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(q: "ACME", state: null, page: null);
+        await model.OnGetAsync(q: "ACME", state: null, type: null, page: null);
 
         Assert.Single(model.Results);
         Assert.NotNull(model.Results[0].Postcard);
@@ -162,7 +162,7 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(q: "CHARITY", state: null, page: null);
+        await model.OnGetAsync(q: "CHARITY", state: null, type: null, page: null);
 
         Assert.Equal(55, model.TotalResults);
         Assert.Equal(2, model.TotalPages);
@@ -180,7 +180,7 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(q: null, state: "IL", page: null);
+        await model.OnGetAsync(q: null, state: "IL", type: null, page: null);
 
         Assert.Equal(1, model.TotalResults);
         Assert.Equal("111111111", model.Results[0].Pub78.EIN);
@@ -198,7 +198,7 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(q: "FOOD", state: "IL", page: null);
+        await model.OnGetAsync(q: "FOOD", state: "IL", type: null, page: null);
 
         Assert.Equal(1, model.TotalResults);
         Assert.Equal("111111111", model.Results[0].Pub78.EIN);
@@ -218,7 +218,7 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        await model.OnGetAsync(q: "ANY", state: badState, page: null);
+        await model.OnGetAsync(q: "ANY", state: badState, type: null, page: null);
 
         Assert.Equal("", model.StateFilter);
         Assert.Equal(1, model.TotalResults);
@@ -232,12 +232,61 @@ public class SearchModelTests
         await db.SaveChangesAsync();
 
         var model = CreateModel(db);
-        var result = await model.OnGetAsync(q: "123456789", state: "IL", page: null);
+        var result = await model.OnGetAsync(q: "123456789", state: "IL", type: null, page: null);
 
         var redirect = Assert.IsType<RedirectToPageResult>(result);
         var backUrl = redirect.RouteValues!["back"]?.ToString();
         Assert.NotNull(backUrl);
         Assert.Contains("state=IL", backUrl);
+    }
+
+    [Fact]
+    public async Task TypeFilter_FiltersByTypeCode()
+    {
+        using var db = CreateDb("Search_TypeFilter_FiltersByTypeCode");
+        db.Pub78.AddRange(
+            new Pub78 { EIN = "111111111", CompanyName = "PUBLIC CHARITY ORG", TypeCode = "3", Country = "US" },
+            new Pub78 { EIN = "222222222", CompanyName = "SOCIAL WELFARE ORG", TypeCode = "4", Country = "US" }
+        );
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(q: null, state: null, type: "3", page: null);
+
+        Assert.Equal("3", model.TypeFilter);
+        Assert.Equal(1, model.TotalResults);
+        Assert.Equal("111111111", model.Results[0].Pub78.EIN);
+    }
+
+    [Fact]
+    public async Task TypeFilter_InvalidCode_IsIgnored()
+    {
+        using var db = CreateDb("Search_TypeFilter_InvalidCode_IsIgnored");
+        db.Pub78.Add(new Pub78 { EIN = "111111111", CompanyName = "ANY ORG", TypeCode = "3", Country = "US" });
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(q: null, state: null, type: "BADCODE", page: null);
+
+        Assert.Equal("", model.TypeFilter);
+        Assert.Equal(0, model.TotalResults);
+    }
+
+    [Fact]
+    public async Task TypeFilter_CombinedWithNameSearch()
+    {
+        using var db = CreateDb("Search_TypeFilter_CombinedWithNameSearch");
+        db.Pub78.AddRange(
+            new Pub78 { EIN = "111111111", CompanyName = "FOOD BANK CHARITY", TypeCode = "3", Country = "US" },
+            new Pub78 { EIN = "222222222", CompanyName = "FOOD BANK CIVIC", TypeCode = "4", Country = "US" }
+        );
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(q: "FOOD", state: null, type: "3", page: null);
+
+        Assert.Equal(1, model.TotalResults);
+        Assert.Equal("111111111", model.Results[0].Pub78.EIN);
     }
 }
 

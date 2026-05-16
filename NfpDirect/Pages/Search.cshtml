@@ -14,7 +14,7 @@
 
 <form method="get" action="/Search" class="mb-4" role="search">
     <div class="row g-2">
-        <div class="col-sm-8 col-lg-9">
+        <div class="col-sm-8 col-lg-6">
             <input type="search" name="q" class="form-control form-control-lg"
                    placeholder="Organization name or 9-digit EIN…"
                    aria-label="Search organizations"
@@ -29,6 +29,22 @@
                    value="@Model.StateFilter"
                    list="us-states" autocomplete="off" />
         </div>
+        <div class="col-sm-3 col-lg-3">
+            <select name="type" class="form-select form-select-lg" aria-label="Filter by type">
+                <option value="">All Types</option>
+                @foreach (var kv in NfpDirect.Helpers.TypeCodeHelper.Labels.OrderBy(x => x.Value))
+                {
+                    if (Model.TypeFilter == kv.Key)
+                    {
+                        <option value="@kv.Key" selected>@kv.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@kv.Key">@kv.Value</option>
+                    }
+                }
+            </select>
+        </div>
         <div class="col-sm-1">
             <button type="submit" class="btn btn-primary btn-lg w-100" aria-label="Search">
                 <i class="fa fa-search" aria-hidden="true"></i>
@@ -36,13 +52,16 @@
         </div>
     </div>
     <div class="form-text">
-        Search by name (partial match), 9-digit EIN, or filter by 2-letter state code.
+        Search by name (partial match), 9-digit EIN, or filter by state and type.
     </div>
 </form>
 
 @{
     var stateParam = Model.StateFilter.Length > 0
         ? $"&state={Uri.EscapeDataString(Model.StateFilter)}"
+        : "";
+    var typeParam = Model.TypeFilter.Length > 0
+        ? $"&type={Uri.EscapeDataString(Model.TypeFilter)}"
         : "";
     var searchBackUrl = Uri.EscapeDataString("/Search" + (ViewContext.HttpContext.Request.QueryString.Value ?? ""));
 }
@@ -69,14 +88,14 @@
                 @if (Model.PageNumber > 0)
                 {
                     <a class="btn btn-sm btn-outline-primary me-1"
-                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam&page=@(Model.PageNumber - 1)">
+                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam@typeParam&page=@(Model.PageNumber - 1)">
                         <i class="fa fa-chevron-left" aria-hidden="true"></i> Prev
                     </a>
                 }
                 @if (Model.PageNumber < Model.TotalPages - 1)
                 {
                     <a class="btn btn-sm btn-outline-primary"
-                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam&page=@(Model.PageNumber + 1)">
+                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam@typeParam&page=@(Model.PageNumber + 1)">
                         Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
                     </a>
                 }
@@ -127,7 +146,7 @@
                 @if (Model.PageNumber > 0)
                 {
                     <a class="btn btn-outline-primary"
-                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam&page=@(Model.PageNumber - 1)">
+                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam@typeParam&page=@(Model.PageNumber - 1)">
                         <i class="fa fa-chevron-left" aria-hidden="true"></i> Previous
                     </a>
                 }
@@ -138,7 +157,7 @@
                 @if (Model.PageNumber < Model.TotalPages - 1)
                 {
                     <a class="btn btn-outline-primary"
-                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam&page=@(Model.PageNumber + 1)">
+                       href="/Search?q=@Uri.EscapeDataString(Model.Query)@stateParam@typeParam&page=@(Model.PageNumber + 1)">
                         Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
                     </a>
                 }
