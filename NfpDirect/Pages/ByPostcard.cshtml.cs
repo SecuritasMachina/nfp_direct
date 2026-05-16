@@ -35,6 +35,7 @@ public class ByPostcardModel : PageModel
 
         Postcards = await queryable
             .OrderBy(pc => pc.CompanyName)
+            .ThenBy(pc => pc.Id)
             .Skip(PageNumber * PageSize)
             .Take(PageSize)
             .ToListAsync();

@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 65 — Deterministic Pagination Sort in ByPostcard (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/ByPostcard.cshtml.cs`**
+- Added `.ThenBy(pc => pc.Id)` secondary sort after `.OrderBy(pc => pc.CompanyName)`
+- **Inconsistency**: `IndexModel` already had `.ThenBy(p => p.EIN)` for deterministic ordering; `ByPostcardModel` did not
+- Without a secondary sort, organizations with identical names could appear in different order across pages depending on query plan, causing items to repeat or skip at page boundaries
+
+### Impact
+- Pagination is now stable: an org that appears on page 2 will not "move" to page 1 or page 3 between requests
+- Consistent with the Browse page's ordering behavior
+
 ## Iteration 64 — Guard Null Year in Postcard Detail and List Views (2026-05-16)
 
 ### Changes
