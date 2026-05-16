@@ -137,6 +137,37 @@ public class ByPostcardModelTests
         Assert.Single(model.Postcards);
         Assert.Equal("111111111", model.Postcards[0].Id);
     }
+
+    [Fact]
+    public async Task TotalCount_ReflectsAllPostcards()
+    {
+        using var db = CreateDb(nameof(TotalCount_ReflectsAllPostcards));
+        for (int i = 0; i < 5; i++)
+            db.Postcards.Add(new Postcard { Id = i.ToString("D9"), CompanyName = $"CHARITY {i}" });
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(page: null, state: null);
+
+        Assert.Equal(5, model.TotalCount);
+    }
+
+    [Fact]
+    public async Task TotalCount_ReflectsStateFilter()
+    {
+        using var db = CreateDb(nameof(TotalCount_ReflectsStateFilter));
+        db.Postcards.AddRange(
+            new Postcard { Id = "111111111", CompanyName = "IL ORG 1", OrgState = "IL" },
+            new Postcard { Id = "222222222", CompanyName = "IL ORG 2", OrgState = "IL" },
+            new Postcard { Id = "333333333", CompanyName = "TX ORG 1", OrgState = "TX" }
+        );
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(page: null, state: "IL");
+
+        Assert.Equal(2, model.TotalCount);
+    }
 }
 
 file sealed class NullByPostcardTempDataProvider : ITempDataProvider

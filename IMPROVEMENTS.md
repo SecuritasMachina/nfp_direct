@@ -998,6 +998,24 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 94 — ByPostcard Page: Show Total Postcard Count (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/ByPostcard.cshtml.cs`**
+- Added `public long TotalCount { get; private set; }` property
+- Added `TotalCount = await queryable.LongCountAsync();` (respects state filter, covered by output cache)
+
+**`NfpDirect/Pages/ByPostcard.cshtml`**
+- Heading now shows `<small class="text-muted">X,XXX,XXX total</small>` consistent with Browse
+
+**`NfpDirect.Tests/ByPostcardModelTests.cs`**
+- Added `TotalCount_ReflectsAllPostcards` and `TotalCount_ReflectsStateFilter` tests
+
+### Impact
+- ByPostcard page is now consistent with Browse: users see total postcard count in heading
+- 159 tests passing
+
 ## Iteration 93 — Browse Page: Show Total Organization Count (2026-05-16)
 
 ### Changes
