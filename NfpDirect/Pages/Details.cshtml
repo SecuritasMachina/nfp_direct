@@ -46,7 +46,7 @@ else
             @if (Model.Postcard != null)
             {
                 var pc = Model.Postcard;
-                <h6 class="text-muted">Year: @pc.Year</h6>
+                @if (pc.Year.HasValue) { <h6 class="text-muted">Year: @pc.Year</h6> }
 
                 <address>
                     @if (!string.IsNullOrWhiteSpace(pc.OrgAddressLine1)) { @pc.OrgAddressLine1<br /> }

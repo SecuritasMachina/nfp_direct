@@ -998,6 +998,20 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 64 — Guard Null Year in Postcard Detail and List Views (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Details.cshtml`**
+- `<h6 class="text-muted">Year: @pc.Year</h6>` → wrapped in `@if (pc.Year.HasValue)` so "Year: " label is not rendered when Year is null
+
+**`NfpDirect/Pages/ByPostcard.cshtml`**
+- `<small class="text-muted ms-1">@pc.Year</small>` → wrapped in `@if (pc.Year.HasValue)` so empty small tag is not emitted
+
+### Impact
+- No blank "Year: " label on detail pages with incomplete postcard data
+- Cleaner card headers on ByPostcard listing when year is absent
+
 ## Iteration 63 — TitleCase Applied to DBA Names on Index and ByPostcard (2026-05-16)
 
 ### Changes

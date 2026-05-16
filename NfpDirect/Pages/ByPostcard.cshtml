@@ -76,7 +76,7 @@
                     @TypeCodeHelper.TitleCase(pc.CompanyName)
                 </a>
                 <small class="text-muted ms-1">EIN: @TypeCodeHelper.FormatEin(pc.Id)</small>
-                <small class="text-muted ms-1">@pc.Year</small>
+                @if (pc.Year.HasValue) { <small class="text-muted ms-1">@pc.Year</small> }
             </h5>
             @if (!string.IsNullOrWhiteSpace(pc.DBA1))
             {
