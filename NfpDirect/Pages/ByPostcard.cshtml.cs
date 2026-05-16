@@ -18,6 +18,7 @@ public class ByPostcardModel : PageModel
     public int PageNumber { get; private set; }
     public bool HasNextPage { get; private set; }
     public string StateFilter { get; private set; } = "";
+    public long TotalCount { get; private set; }
     public List<Postcard> Postcards { get; private set; } = [];
 
     public async Task<IActionResult> OnGetAsync([FromQuery] string? page, [FromQuery] string? state)
@@ -32,6 +33,8 @@ public class ByPostcardModel : PageModel
         var queryable = _db.Postcards.AsNoTracking();
         if (StateFilter.Length > 0)
             queryable = queryable.Where(pc => pc.OrgState == StateFilter);
+
+        TotalCount = await queryable.LongCountAsync();
 
         Postcards = await queryable
             .OrderBy(pc => pc.CompanyName)
