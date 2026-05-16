@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 73 — noindex on Paginated Browse and ByPostcard Pages (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/Index.cshtml`**, **`NfpDirect/Pages/ByPostcard.cshtml`**
+- Pages beyond page 0 now set `ViewData["Robots"] = "noindex, follow"` → renders `<meta name="robots" content="noindex, follow">`
+- Page 0 (first page) remains indexable regardless of state filter
+
+### Impact
+- Prevents crawlers from indexing hundreds of alphabetical listing pages (e.g., page 50 of browse) that add no search engine value
+- Preserves crawl budget for the first page of each state filter and for Details pages
+- `follow` keeps link equity flowing through pagination links
+
 ## Iteration 72 — Dynamic Meta Description for Browse and ByPostcard (2026-05-16)
 
 ### Changes
