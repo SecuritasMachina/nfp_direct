@@ -153,6 +153,37 @@ public class IndexModelTests
         Assert.Single(model.Entries);
         Assert.Equal("111111111", model.Entries[0].Pub78.EIN);
     }
+
+    [Fact]
+    public async Task TotalCount_ReflectsAllOrgs()
+    {
+        using var db = CreateDb(nameof(TotalCount_ReflectsAllOrgs));
+        for (int i = 0; i < 7; i++)
+            db.Pub78.Add(new Pub78 { EIN = i.ToString("D9"), CompanyName = $"ORG {i}", Country = "US" });
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(page: null, state: null);
+
+        Assert.Equal(7, model.TotalCount);
+    }
+
+    [Fact]
+    public async Task TotalCount_ReflectsStateFilter()
+    {
+        using var db = CreateDb(nameof(TotalCount_ReflectsStateFilter));
+        db.Pub78.AddRange(
+            new Pub78 { EIN = "111111111", CompanyName = "IL ORG 1", State = "IL", Country = "US" },
+            new Pub78 { EIN = "222222222", CompanyName = "IL ORG 2", State = "IL", Country = "US" },
+            new Pub78 { EIN = "333333333", CompanyName = "TX ORG 1", State = "TX", Country = "US" }
+        );
+        await db.SaveChangesAsync();
+
+        var model = CreateModel(db);
+        await model.OnGetAsync(page: null, state: "IL");
+
+        Assert.Equal(2, model.TotalCount);
+    }
 }
 
 file sealed class NullIndexTempDataProvider : ITempDataProvider
