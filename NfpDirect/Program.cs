@@ -30,6 +30,19 @@ builder.Services.AddResponseCompression(opts =>
     opts.Providers.Add<GzipCompressionProvider>();
 });
 
+builder.Services.AddOutputCache(opts =>
+{
+    opts.AddBasePolicy(p => p.NoCache());
+    opts.AddPolicy("BrowsePage", p => p
+        .Expire(TimeSpan.FromSeconds(60))
+        .SetVaryByQuery("page", "state")
+        .Tag("browse"));
+    opts.AddPolicy("DetailsPage", p => p
+        .Expire(TimeSpan.FromSeconds(30))
+        .SetVaryByQuery("id")
+        .Tag("details"));
+});
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
@@ -60,6 +73,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseRouting();
+app.UseOutputCache();
 app.MapRazorPages();
 app.MapGet("/health", async (NfpDbContext db) =>
 {

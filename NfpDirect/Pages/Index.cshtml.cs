@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using NfpDirect.Data;
 using NfpDirect.Models;
@@ -12,6 +13,7 @@ public class IndexEntry
     public Postcard? Postcard { get; init; }
 }
 
+[OutputCache(PolicyName = "BrowsePage")]
 public class IndexModel : PageModel
 {
     private readonly NfpDbContext _db;
