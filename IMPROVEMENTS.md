@@ -998,6 +998,19 @@ User requested this migration. The Java app used Spring Boot 2.1 (EOL), JSP view
 
 ---
 
+## Iteration 57 — EIN Shown on ByPostcard List Cards (2026-05-16)
+
+### Changes
+
+**`NfpDirect/Pages/ByPostcard.cshtml`**
+- Added `<small class="text-muted ms-1">EIN: @TypeCodeHelper.FormatEin(pc.Id)</small>` in the card title row, alongside the year
+- **Before**: EIN was only visible after clicking "Details"
+- **After**: EIN displayed inline in the list (formatted with hyphen: `12-3456789`)
+
+### Impact
+- Users can identify organizations by EIN without navigating to the detail page
+- Consistent with Browse (Index) and Search results, which both show the formatted EIN inline
+
 ## Iteration 56 — State Filter Shown in Browse/ByPostcard Page Headings (2026-05-16)
 
 ### Changes

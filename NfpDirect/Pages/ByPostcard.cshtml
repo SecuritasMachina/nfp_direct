@@ -73,7 +73,8 @@
         <div class="card-body py-2">
             <h5 class="card-title mb-1">
                 @TypeCodeHelper.TitleCase(pc.CompanyName)
-                <small class="text-muted">@pc.Year</small>
+                <small class="text-muted ms-1">EIN: @TypeCodeHelper.FormatEin(pc.Id)</small>
+                <small class="text-muted ms-1">@pc.Year</small>
             </h5>
             @if (!string.IsNullOrWhiteSpace(pc.DBA1))
             {
