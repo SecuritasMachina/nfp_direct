@@ -65,14 +65,15 @@
         : "";
     var searchBackUrl = Uri.EscapeDataString("/Search" + (ViewContext.HttpContext.Request.QueryString.Value ?? ""));
 }
-@if (Model.Query.Length > 0 || Model.StateFilter.Length > 0)
+@if (Model.Query.Length > 0 || Model.StateFilter.Length > 0 || Model.TypeFilter.Length > 0)
 {
     if (Model.TotalResults == 0)
     {
         <div class="alert alert-info">
             No organizations found
             @if (Model.Query.Length > 0) { <text>matching "<strong>@Model.Query</strong>"</text> }
-            @if (Model.StateFilter.Length > 0) { <text>in state <strong>@Model.StateFilter</strong></text> }.
+            @if (Model.StateFilter.Length > 0) { <text>in state <strong>@Model.StateFilter</strong></text> }
+            @if (Model.TypeFilter.Length > 0) { <text>with type <strong>@NfpDirect.Helpers.TypeCodeHelper.Label(Model.TypeFilter)</strong></text> }.
         </div>
     }
     else

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NfpDirect.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+93b711eb19174c307e9f492817b686b48ce85263")]
 [assembly: System.Reflection.AssemblyProductAttribute("NfpDirect.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NfpDirect.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -137,7 +137,15 @@ else
                     {
                         @pc.OrgAddressLine2<br />
                     }
-                    @TypeCodeHelper.FormatPostalLine(pc.OrgCity, pc.OrgState, pc.OrgPostalCode)<br />
+                    @if (!string.IsNullOrWhiteSpace(pc.OrgCity)) { @pc.OrgCity.Trim() }
+                    @if (!string.IsNullOrWhiteSpace(pc.OrgState))
+                    {
+                        @if (!string.IsNullOrWhiteSpace(pc.OrgCity)) { <text>, </text> }
+                        <a href="/?state=@Uri.EscapeDataString(pc.OrgState.Trim())"
+                           class="text-decoration-none">@pc.OrgState.Trim()</a>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(pc.OrgPostalCode)) { <text> @pc.OrgPostalCode.Trim()</text> }
+                    <br />
                     @if (TypeCodeHelper.ShouldShowCountry(pc.OrgCountry)) { @pc.OrgCountry<br /> }
                 </address>
 

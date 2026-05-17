@@ -61,6 +61,11 @@ dl.row dt, dl.row dd {
     max-width: 400px;
 }
 
+:focus-visible {
+    outline: 3px solid #0d6efd;
+    outline-offset: 2px;
+}
+
 @media print {
     nav, form, .btn, footer { display: none !important; }
     .card { border: 1px solid #ccc !important; box-shadow: none !important; }
